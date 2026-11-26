@@ -25,25 +25,27 @@ const ROTATING_WORDS = ['Websites', 'Stores', 'Brands', 'Growth'] as const;
 const LINE_1 = ['Digital', 'Solutions'];
 const LINE_2 = ['That', 'Drive'];
 
-function MaskedWords({ words, delay }: { words: string[]; delay: number }) {
+/**
+ * One masked word: slides up out of an overflow-hidden mask. Words are
+ * laid out in a flex row with a fixed gap (see the <h1> below), so every
+ * gap between words is exactly the same — no literal whitespace, no
+ * per-word margins that collapse or differ at line wraps.
+ */
+function MaskedWord({ children, delay }: { children: React.ReactNode; delay: number }) {
   return (
-    <span className="flex flex-wrap gap-x-[0.28em]">
-      {words.map((word, i) => (
-        <span key={word} className="overflow-hidden pb-[0.08em] -mb-[0.08em]">
-          <motion.span
-            className="inline-block will-change-transform"
-            initial={{ y: '110%' }}
-            animate={{ y: 0 }}
-            transition={{
-              duration: 0.9,
-              delay: delay + i * 0.09,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
+    <span className="overflow-hidden pb-[0.08em] -mb-[0.08em]">
+      <motion.span
+        className="inline-block will-change-transform"
+        initial={{ y: '110%' }}
+        animate={{ y: 0 }}
+        transition={{
+          duration: 0.9,
+          delay,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+      >
+        {children}
+      </motion.span>
     </span>
   );
 }
@@ -284,13 +286,26 @@ export default function Hero() {
           Lahore-based digital agency
         </motion.p>
 
-        <h1 className="font-display max-w-5xl text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.98] font-bold tracking-tight text-balance">
-          <MaskedWords words={LINE_1} delay={0.25} />
-          <br />
-          <MaskedWords words={LINE_2} delay={0.45} />
-          <span className="inline-block">
-            {' '}
-            <RotatingWord />
+        <h1 className="font-display max-w-5xl text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.98] font-bold tracking-tight">
+          {/* Each line is one flex row with a fixed 0.28em gap — the rotating
+              word is a flex item in the second row, so its gap matches every
+              other word gap exactly, at desktop and mobile widths. */}
+          <span className="flex flex-wrap gap-x-[0.28em]">
+            {LINE_1.map((word, i) => (
+              <MaskedWord key={word} delay={0.25 + i * 0.09}>
+                {word}
+              </MaskedWord>
+            ))}
+          </span>
+          <span className="flex flex-wrap gap-x-[0.28em]">
+            {LINE_2.map((word, i) => (
+              <MaskedWord key={word} delay={0.45 + i * 0.09}>
+                {word}
+              </MaskedWord>
+            ))}
+            <MaskedWord delay={0.63}>
+              <RotatingWord />
+            </MaskedWord>
           </span>
         </h1>
 

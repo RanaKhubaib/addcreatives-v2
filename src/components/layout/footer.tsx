@@ -21,9 +21,9 @@ import { Logo } from '@/components/ui/logo';
 const SITEMAP = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
-  { label: 'Work', href: '/work' },
+  { label: 'Work', href: '/case-studies' },
   { label: 'About', href: '/about' },
-  { label: 'Journal', href: '/journal' },
+  { label: 'Journal', href: '/blog' },
   { label: 'Contact', href: '/contact' },
 ] as const;
 

@@ -24,7 +24,7 @@ function Word({
   return (
     <motion.span
       style={reduceMotion ? undefined : { opacity, color }}
-      className="mr-[0.28em] inline-block"
+      className="inline-block"
     >
       {word}
     </motion.span>
@@ -62,7 +62,7 @@ export default function Manifesto() {
           <span className="h-px w-10 bg-royal" aria-hidden />
           Our manifesto
         </p>
-        <p className="font-display text-[clamp(1.9rem,4.6vw,3.75rem)] leading-[1.18] font-bold tracking-tight text-balance">
+        <p className="flex flex-wrap gap-x-[0.28em] font-display text-[clamp(1.9rem,4.6vw,3.75rem)] leading-[1.18] font-bold tracking-tight text-balance">
           {WORDS.map((word, i) => (
             <Word
               key={`${word}-${i}`}

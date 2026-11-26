@@ -1,40 +1,52 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight, ChevronDown, Menu, Search, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { services } from '@/data/services';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
-import { ThemeToggle } from '@/components/layout/theme-toggle';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/services' },
-  { label: 'Work', href: '/work' },
+  { label: 'Work', href: '/case-studies' },
   { label: 'About', href: '/about' },
-  { label: 'Journal', href: '/journal' },
+  { label: 'Journal', href: '/blog' },
   { label: 'Contact', href: '/contact' },
 ] as const;
 
-/** Opens the command palette (listened to by <CommandPalette />). */
-export function openCommandPalette() {
-  window.dispatchEvent(new CustomEvent('ac:open-command-palette'));
-}
+/**
+ * How long the mega menu waits after the pointer leaves the header before
+ * closing. The delay forgives the short trip between the Services button
+ * and the panel, so the menu never flickers shut mid-move.
+ */
+const MEGA_CLOSE_DELAY_MS = 150;
 
 /**
- * Sticky nav: logo left, links, theme toggle, Cmd+K button, "Start a
- * project" CTA, full-screen staggered mobile menu. Transparent over the
- * hero, solid (blur + border) once scrolled. Desktop Services link opens
- * a full-width mega menu with all 7 services.
+ * Sticky nav: logo left, links, "Start a project" CTA, full-screen
+ * staggered mobile menu. Transparent over the hero, solid once scrolled.
+ * Desktop Services link opens a full-width mega menu with all 7 services.
+ *
+ * Mega-menu visibility fix (2026-11-27): the menu used to close the moment
+ * the pointer left the small Services button, because the mouseleave
+ * handler lived on the button's <li> — there is a ~16px strip of nav
+ * between the button and the panel, and crossing it killed the menu
+ * before the pointer could reach the panel. Hover is now handled at the
+ * <header> level instead: the panel is a child of the header, so moving
+ * from the button into the panel never leaves the header, and the close
+ * is delayed by 150ms so a brief exit is forgiven. The panel is a solid
+ * white, full-width sheet that paints above all page content.
  */
 export function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,6 +61,7 @@ export function Nav() {
     setPrevPathname(pathname);
     setMegaOpen(false);
     setMobileOpen(false);
+    setMobileServicesOpen(false);
   }
 
   // Close menus on Escape; lock body scroll for the mobile menu.
@@ -70,15 +83,42 @@ export function Nav() {
     };
   }, [mobileOpen]);
 
+  // Clear any pending delayed close (component unmount).
+  useEffect(
+    () => () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    },
+    [],
+  );
+
+  const cancelClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const openMega = () => {
+    cancelClose();
+    setMegaOpen(true);
+  };
+
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setMegaOpen(false), MEGA_CLOSE_DELAY_MS);
+  };
+
   const solid = scrolled || megaOpen;
 
   return (
     <>
       <header
+        onMouseEnter={cancelClose}
+        onMouseLeave={scheduleClose}
         className={cn(
           'sticky top-0 z-50 transition-all duration-300',
           solid
-            ? 'border-b border-ink/10 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-ink/85'
+            ? 'border-b border-ink/10 bg-white shadow-[0_8px_30px_rgba(10,15,28,0.08)] dark:border-white/10 dark:bg-ink'
             : 'border-b border-transparent bg-transparent',
         )}
       >
@@ -92,10 +132,7 @@ export function Nav() {
 
           {/* Desktop links */}
           <ul className="hidden items-center gap-1 lg:flex">
-            <li
-              onMouseEnter={() => setMegaOpen(true)}
-              onMouseLeave={() => setMegaOpen(false)}
-            >
+            <li onMouseEnter={openMega}>
               <button
                 type="button"
                 aria-expanded={megaOpen}
@@ -135,19 +172,6 @@ export function Nav() {
           </ul>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              onClick={openCommandPalette}
-              aria-label="Search — open command palette (Control or Command K)"
-              className="hidden h-10 cursor-pointer items-center gap-2 rounded-full border border-ink/10 bg-white/70 px-3 text-sm text-ink/60 transition-colors hover:border-royal hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal md:flex dark:border-white/15 dark:bg-white/5 dark:text-white/60 dark:hover:border-peri dark:hover:text-peri"
-            >
-              <Search className="h-4 w-4" />
-              <span className="hidden xl:inline">Search</span>
-              <kbd className="rounded-md border border-ink/10 bg-ink/5 px-1.5 py-0.5 text-[11px] font-semibold dark:border-white/15 dark:bg-white/10">
-                ⌘K
-              </kbd>
-            </button>
-            <ThemeToggle />
             <Button href="/contact" size="md" className="hidden sm:inline-flex">
               Start a project
               <ArrowUpRight className="h-4 w-4" />
@@ -164,7 +188,10 @@ export function Nav() {
           </div>
         </nav>
 
-        {/* Services mega menu (desktop) */}
+        {/* Services mega menu (desktop). Solid white sheet, full width, above
+            all page content. Kept open by the header-level hover handlers
+            above — the panel is a child of the header, so moving from the
+            trigger into the panel never triggers a close. */}
         <AnimatePresence>
           {megaOpen ? (
             <motion.div
@@ -173,9 +200,9 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="absolute inset-x-0 top-full hidden border-b border-ink/10 bg-white/95 shadow-[0_30px_60px_-30px_rgb(10_15_28/0.25)] backdrop-blur-xl lg:block dark:border-white/10 dark:bg-ink/95"
-              onMouseEnter={() => setMegaOpen(true)}
-              onMouseLeave={() => setMegaOpen(false)}
+              className="absolute inset-x-0 top-full hidden border-b border-ink/10 bg-white shadow-[0_30px_60px_-30px_rgb(10_15_28/0.25)] lg:block dark:border-white/10 dark:bg-ink"
+              onMouseEnter={openMega}
+              onMouseLeave={scheduleClose}
             >
               <div className="mx-auto grid w-full max-w-7xl grid-cols-3 gap-2 px-6 py-8">
                 {services.map((service, index) => (
@@ -209,7 +236,7 @@ export function Nav() {
         </AnimatePresence>
       </header>
 
-      {/* Mobile menu — full-screen overlay, staggered links */}
+      {/* Mobile menu — full-screen overlay, staggered links, Services accordion */}
       <AnimatePresence>
         {mobileOpen ? (
           <motion.div
@@ -217,12 +244,12 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[110] flex flex-col bg-navy text-white lg:hidden"
+            className="fixed inset-0 z-[110] flex flex-col overflow-y-auto bg-navy text-white lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
           >
-            <div className="flex h-[72px] items-center justify-between px-6">
+            <div className="flex h-[72px] shrink-0 items-center justify-between px-6">
               <Logo variant="dark" />
               <button
                 type="button"
@@ -233,14 +260,71 @@ export function Nav() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center px-6">
+            <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center px-6 py-6">
               <ul className="space-y-1">
-                {NAV_LINKS.map((link, index) => (
+                {/* Services accordion */}
+                <motion.li
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08, duration: 0.4 }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setMobileServicesOpen((open) => !open)}
+                    aria-expanded={mobileServicesOpen}
+                    aria-controls="mobile-services-list"
+                    className="flex w-full items-center justify-between border-b border-white/10 py-4 font-display text-4xl font-bold tracking-tight transition-colors hover:text-peri"
+                  >
+                    Services
+                    <ChevronDown
+                      className={cn(
+                        'h-6 w-6 shrink-0 text-white/50 transition-transform duration-300',
+                        mobileServicesOpen && 'rotate-180',
+                      )}
+                    />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {mobileServicesOpen ? (
+                      <motion.ul
+                        id="mobile-services-list"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                        className="overflow-hidden"
+                      >
+                        {services.map((service) => (
+                          <li key={service.slug}>
+                            <Link
+                              href={`/services/${service.slug}`}
+                              onClick={() => setMobileOpen(false)}
+                              className="flex items-center justify-between border-b border-white/5 py-3 pl-2 text-lg font-semibold text-white/85 transition-colors hover:text-peri"
+                            >
+                              {service.title}
+                              <ArrowUpRight className="h-5 w-5 text-white/40" />
+                            </Link>
+                          </li>
+                        ))}
+                        <li>
+                          <Link
+                            href="/services"
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center justify-between border-b border-white/5 py-3 pl-2 text-lg font-bold text-peri"
+                          >
+                            All services
+                            <ArrowUpRight className="h-5 w-5" />
+                          </Link>
+                        </li>
+                      </motion.ul>
+                    ) : null}
+                  </AnimatePresence>
+                </motion.li>
+                {NAV_LINKS.slice(1).map((link, index) => (
                   <motion.li
                     key={link.href}
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.08 + index * 0.06, duration: 0.4 }}
+                    transition={{ delay: 0.14 + index * 0.06, duration: 0.4 }}
                   >
                     <Link
                       href={link.href}
@@ -263,17 +347,6 @@ export function Nav() {
                   Start a project
                   <ArrowUpRight className="h-5 w-5" />
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    openCommandPalette();
-                  }}
-                  className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/20 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                >
-                  <Search className="h-4 w-4" />
-                  Search — press ⌘K
-                </button>
               </motion.div>
             </nav>
           </motion.div>

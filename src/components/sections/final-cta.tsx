@@ -100,7 +100,7 @@ export function FinalCta() {
 
         <h2
           id="final-cta-heading"
-          className="mx-auto mt-5 max-w-4xl font-display text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl"
+          className="mx-auto mt-5 flex max-w-4xl flex-wrap justify-center gap-x-[0.28em] font-display text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl"
         >
           {HEADLINE.map((word, i) => (
             <motion.span
@@ -109,7 +109,7 @@ export function FinalCta() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.55, ease: "easeOut", delay: i * 0.07 }}
-              className="mr-[0.28em] inline-block last:mr-0"
+              className="inline-block"
             >
               {word}
             </motion.span>

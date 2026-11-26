@@ -119,28 +119,7 @@ html.has-custom-cursor * {
   cursor: none !important;
 }
 
-/* Glassmorphism. */
-.glass {
-  background: rgb(255 255 255 / 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgb(255 255 255 / 0.4);
-}
-
-.dark .glass {
-  background: rgb(10 15 28 / 0.55);
-  border-color: rgb(255 255 255 / 0.12);
-}
-
 /* Diagonal-stripe motif in brand blues, low opacity. */
-.stripe-bg {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgb(11 77 162 / 0.06) 0 1px,
-    transparent 1px 14px
-  );
-}
-
 .stripe-divider {
   height: 1px;
   background-image: repeating-linear-gradient(

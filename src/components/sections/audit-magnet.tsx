@@ -19,8 +19,8 @@ import {
  * Free website & SEO audit — lead magnet.
  *
  * Scanning visual: pure CSS/SVG (a rotating radar sweep + progress ring).
- * lottie-react is available in the project, but a hand-built SVG sweep is
- * lighter here and avoids shipping an animation JSON for a simple effect.
+ * A hand-built SVG sweep is lighter here than any animation library and
+ * avoids shipping an animation JSON for a simple effect.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

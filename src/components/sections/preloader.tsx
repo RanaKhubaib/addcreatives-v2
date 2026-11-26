@@ -4,12 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 const FLAG = 'ac-preloader-seen';
-const MAX_MS = 2500;
+const MAX_MS = 1800;
 
 /**
  * Full-screen navy intro overlay. Counts 0 → 100, then slides up like a
  * curtain. Skippable (click / Escape), shows once per session, and never
- * blocks content: it dismisses itself after 2.5s at the latest.
+ * blocks content: it dismisses itself after 1.8s at the latest.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true);
@@ -52,13 +52,13 @@ export default function Preloader() {
     const startedAt = performance.now();
     let raf = 0;
     const tick = (now: number) => {
-      const p = Math.min(1, (now - startedAt) / 1400);
+      const p = Math.min(1, (now - startedAt) / 900);
       const eased = 1 - Math.pow(1 - p, 3);
       setCount(Math.round(eased * 100));
       if (p < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        window.setTimeout(dismiss, 250);
+        window.setTimeout(dismiss, 150);
       }
     };
     raf = requestAnimationFrame(tick);
@@ -92,7 +92,7 @@ export default function Preloader() {
       className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center overflow-hidden bg-navy text-white"
       initial={{ y: 0 }}
       exit={{ y: '-100%' }}
-      transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+      transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
     >
       {/* Diagonal-stripe motif sweeping across the overlay. */}
       <div

@@ -17,7 +17,8 @@ import {
 } from 'lucide-react';
 import { services, type Service, type ServiceCategory } from '@/data/services';
 
-const ICON_MAP: Record<string, LucideIcon> = {
+/** Service icon key → Lucide icon. Shared with the /services overview. */
+export const SERVICE_ICON_MAP: Record<string, LucideIcon> = {
   Globe,
   ShoppingBag,
   Search,
@@ -37,7 +38,7 @@ const FILTERS: { label: Filter; count: number }[] = [
 ];
 
 function ServiceCard({ service, large }: { service: Service; large: boolean }) {
-  const Icon = ICON_MAP[service.icon] ?? Sparkles;
+  const Icon = SERVICE_ICON_MAP[service.icon] ?? Sparkles;
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
@@ -62,7 +63,7 @@ function ServiceCard({ service, large }: { service: Service; large: boolean }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.94 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className={`group ${large ? 'md:col-span-2' : ''}`}
+      className={`group ${large ? 'md:col-span-2' : ''} transition-all duration-300 hover:-translate-y-1.5`}
     >
       <div
         onMouseMove={onMove}
@@ -74,7 +75,7 @@ function ServiceCard({ service, large }: { service: Service; large: boolean }) {
           aria-hidden
           className="absolute inset-0 rounded-card bg-[linear-gradient(135deg,#0b4da2,#5b7fc0,#163e73,#0b4da2)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
         />
-        <div className="relative m-[2px] flex h-[calc(100%-4px)] flex-col overflow-hidden rounded-[22px] bg-white p-6 sm:p-7">
+        <div className="relative m-[2px] flex h-[calc(100%-4px)] flex-col overflow-hidden rounded-[22px] border border-ink/10 bg-white p-8 shadow-[0_10px_36px_rgba(10,15,28,0.10)] transition-all duration-300 group-hover:border-royal/40 group-hover:shadow-[0_28px_56px_rgba(22,62,115,0.22)] sm:p-9">
           {/* Mouse-follow spotlight glow. */}
           <div
             aria-hidden
@@ -88,18 +89,22 @@ function ServiceCard({ service, large }: { service: Service; large: boolean }) {
           />
 
           <div className="relative flex items-start justify-between gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-mist text-navy transition-colors duration-300 group-hover:bg-navy group-hover:text-white">
-              <Icon className="h-6 w-6" aria-hidden />
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-navy text-white shadow-md transition-colors duration-300 group-hover:bg-royal">
+              <Icon className="h-7 w-7" aria-hidden />
             </span>
             <span className="rounded-full border border-ink/10 px-3 py-1 text-[11px] font-bold tracking-[0.14em] text-ink/60 uppercase">
               {service.category}
             </span>
           </div>
 
-          <h3 className="font-display relative mt-5 text-xl font-bold text-ink sm:text-2xl">
+          <h3
+            className={`font-display relative mt-6 font-extrabold tracking-tight text-ink ${
+              large ? 'text-2xl sm:text-3xl' : 'text-2xl sm:text-[1.75rem]'
+            }`}
+          >
             {service.title}
           </h3>
-          <p className="relative mt-2 text-[15px] leading-relaxed text-ink/70">
+          <p className="relative mt-3 text-base leading-relaxed text-ink/70">
             {service.short}
           </p>
 
@@ -190,7 +195,7 @@ export default function ServicesBento() {
           ))}
         </div>
 
-        <motion.div layout className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div layout className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           <AnimatePresence mode="popLayout">
             {visible.map((service, i) => (
               <ServiceCard key={service.slug} service={service} large={i === 0} />

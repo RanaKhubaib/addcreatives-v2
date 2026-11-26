@@ -3,12 +3,9 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { caseStudies, type CaseStudy } from '@/data/case-studies';
-
-gsap.registerPlugin(ScrollTrigger);
 
 function WorkCard({ study, widthClass }: { study: CaseStudy; widthClass: string }) {
   const [bubble, setBubble] = useState<{ x: number; y: number; show: boolean }>({
@@ -94,52 +91,76 @@ function WorkCard({ study, widthClass }: { study: CaseStudy; widthClass: string 
 export default function SelectedWork() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const mm = gsap.matchMedia();
+    // GSAP is loaded lazily, only on desktop and only when motion is
+    // allowed — it is not part of the initial bundle. On mobile and with
+    // prefers-reduced-motion the cards render as a plain vertical stack.
+    if (reduceMotion) return;
+    if (!window.matchMedia('(min-width: 768px)').matches) return;
 
-    mm.add('(min-width: 768px)', () => {
-      const section = sectionRef.current;
-      const track = trackRef.current;
-      if (!section || !track) return;
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
 
-      const distance = () => track.scrollWidth - window.innerWidth;
-      const parallaxEls = () =>
-        Array.from(track.querySelectorAll<HTMLElement>('[data-parallax]'));
+    (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]);
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-      const tween = gsap.to(track, {
-        x: () => -distance(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${distance()}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            // Subtle image parallax inside each card as the track moves.
-            const shift = (0.5 - self.progress) * 48;
-            parallaxEls().forEach((el) => {
-              el.style.transform = `translateX(${shift}px) scale(1.12)`;
-            });
+      const mm = gsap.matchMedia();
+
+      mm.add('(min-width: 768px)', () => {
+        const section = sectionRef.current;
+        const track = trackRef.current;
+        if (!section || !track) return;
+
+        const distance = () => track.scrollWidth - window.innerWidth;
+        const parallaxEls = () =>
+          Array.from(track.querySelectorAll<HTMLElement>('[data-parallax]'));
+
+        const tween = gsap.to(track, {
+          x: () => -distance(),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${distance()}`,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              // Subtle image parallax inside each card as the track moves.
+              const shift = (0.5 - self.progress) * 48;
+              parallaxEls().forEach((el) => {
+                el.style.transform = `translateX(${shift}px) scale(1.12)`;
+              });
+            },
           },
-        },
+        });
+
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          gsap.set(track, { clearProps: 'x' });
+          parallaxEls().forEach((el) => {
+            el.style.transform = '';
+          });
+        };
       });
 
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-        gsap.set(track, { clearProps: 'x' });
-        parallaxEls().forEach((el) => {
-          el.style.transform = '';
-        });
-      };
-    });
+      cleanup = () => mm.revert();
+    })();
 
-    return () => mm.revert();
-  }, []);
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
+  }, [reduceMotion]);
 
   return (
     <section aria-label="Selected work" className="bg-ink py-24 text-white sm:py-32">
@@ -168,15 +189,18 @@ export default function SelectedWork() {
         </div>
       </div>
 
-      {/* Mobile: vertical stack. */}
-      <div className="mt-12 grid gap-5 px-6 sm:px-8 md:hidden">
+      {/* Mobile + reduced-motion: vertical stack. */}
+      <div
+        className={`mt-12 grid gap-5 px-6 sm:px-8 ${reduceMotion ? '' : 'md:hidden'}`}
+      >
         {caseStudies.map((study) => (
           <WorkCard key={study.slug} study={study} widthClass="w-full" />
         ))}
       </div>
 
-      {/* Desktop: pinned horizontal scroll gallery. */}
-      <div ref={sectionRef} className="relative hidden md:block">
+      {/* Desktop: pinned horizontal scroll gallery (motion allowed only). */}
+      {!reduceMotion ? (
+        <div ref={sectionRef} className="relative hidden md:block">
         <div className="flex min-h-svh items-center overflow-hidden">
           <div ref={trackRef} className="flex gap-6 px-6 will-change-transform sm:px-8">
             {caseStudies.map((study) => (
@@ -204,7 +228,8 @@ export default function SelectedWork() {
             </Link>
           </div>
         </div>
-      </div>
+        </div>
+      ) : null}
     </section>
   );
 }

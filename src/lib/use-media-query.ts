@@ -20,11 +20,3 @@ export function useMediaQuery(query: string): boolean {
   const getServerSnapshot = useCallback(() => false, []);
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
-
-/** True once the component has hydrated on the client. */
-export function useMounted(): boolean {
-  const subscribe = useCallback(() => () => {}, []);
-  const getSnapshot = useCallback(() => true, []);
-  const getServerSnapshot = useCallback(() => false, []);
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-}

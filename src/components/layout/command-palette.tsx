@@ -23,9 +23,9 @@ import { useLenis } from '@/components/effects/lenis-provider';
 const PAGES = [
   { label: 'Home', href: '/', Icon: Home },
   { label: 'Services', href: '/services', Icon: Briefcase },
-  { label: 'Work', href: '/work', Icon: FileText },
+  { label: 'Work', href: '/case-studies', Icon: FileText },
   { label: 'About', href: '/about', Icon: Info },
-  { label: 'Journal', href: '/journal', Icon: Newspaper },
+  { label: 'Journal', href: '/blog', Icon: Newspaper },
   { label: 'Contact', href: '/contact', Icon: MessageCircle },
 ] as const;
 
