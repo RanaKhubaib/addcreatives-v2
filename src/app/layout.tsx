@@ -1,26 +1,32 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
-import { AuthProvider } from "@/components/site/auth-provider";
-import { BackToTop } from "@/components/site/back-to-top";
-import { CursorGlow } from "@/components/site/cursor-glow";
-import { ScrollProgress } from "@/components/site/scroll-progress";
-import { SiteFooter } from "@/components/site/site-footer";
-import { SiteHeader } from "@/components/site/site-header";
-import { WhatsAppButton } from "@/components/site/whatsapp-button";
+import { Instrument_Serif, Inter, Sora } from "next/font/google";
+import type { ReactNode } from "react";
+import { Cursor } from "@/components/site/cursor";
+import { Footer } from "@/components/site/footer";
+import { Nav } from "@/components/site/nav";
 import { siteConfig } from "@/data/site-config";
 import "./globals.css";
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-display",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif-accent",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
+  style: ["italic", "normal"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +51,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -62,17 +68,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   };
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen antialiased">
-        <AuthProvider>
-          <ScrollProgress />
-          <CursorGlow />
-          <SiteHeader />
-          {children}
-          <SiteFooter />
-          <WhatsAppButton />
-          <BackToTop />
-        </AuthProvider>
+    <html
+      lang="en"
+      className={`${sora.variable} ${inter.variable} ${instrumentSerif.variable}`}
+    >
+      <body className="min-h-screen bg-white font-sans text-ink antialiased">
+        <Cursor />
+        <Nav />
+        {children}
+        <Footer />
         <script
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationData).replace(/</g, "\\u003c"),

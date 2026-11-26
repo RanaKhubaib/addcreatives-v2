@@ -11,19 +11,15 @@ type ButtonProps = PropsWithChildren<{
   onClick?: () => void;
 }>;
 
-/* Primary = navy fill that slides to royal on hover (btn-fill).
-   Light = white fill that slides to navy (btn-fill-light). */
 const variants: Record<ButtonVariant, string> = {
-  primary:
-    "btn-fill bg-navy text-white shadow-[0_14px_32px_-16px_rgba(17,65,114,0.7)] hover:shadow-[0_18px_36px_-16px_rgba(11,78,162,0.8)]",
-  secondary:
-    "border border-navy/20 bg-white text-navy hover:border-navy hover:bg-mist",
-  ghost: "text-navy hover:bg-navy/5",
-  light: "btn-fill btn-fill-light bg-white text-navy hover:text-white",
+  primary: "bg-navy text-white hover:bg-royal",
+  secondary: "border border-slate-300 bg-white text-navy hover:border-navy",
+  ghost: "text-navy hover:bg-mist",
+  light: "bg-white text-navy hover:bg-skyline",
 };
 
 const baseClassName =
-  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-colors duration-300";
 
 export function Button({
   children,

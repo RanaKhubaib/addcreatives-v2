@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthForm } from "@/components/site/auth-form";
+import { AuthProvider } from "@/components/site/auth-provider";
 
 export const metadata: Metadata = {
   title: "Sign in | ADD Creatives",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SignInPage() {
-  return <AuthForm mode="signin" />;
+  return (
+    <AuthProvider>
+      <AuthForm mode="signin" />
+    </AuthProvider>
+  );
 }
