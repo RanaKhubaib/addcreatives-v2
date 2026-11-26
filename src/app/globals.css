@@ -1,199 +1,267 @@
-@import "tailwindcss";
-
-/*
-  ADD Creatives — "navy editorial"
-  Palette is the letterhead only: navy #114172, royal #0B4EA2, deep #05367B,
-  ink #111111, white, mist #F5F7FA. Type is the design: Manrope display
-  (tight tracking on big headings), Inter body, Instrument Serif italic
-  for accent words only.
-
-  Spacing system — one rhythm everywhere:
-  - container: max-w-7xl (80rem), px-5 / md:px-8
-  - sections: py-24 / md:py-32 / lg:py-40 (`.section-pad`)
-  - section head to content: mb-12 / md:mb-16 (on SectionHead)
-  - card grids: gap-6 / md:gap-8
-*/
+@import 'tailwindcss';
 
 @theme {
-  --color-navy: #114172;
-  --color-royal: #0b4ea2;
-  --color-deep: #05367b;
-  --color-ink: #111111;
-  --color-mist: #f5f7fa;
-  --color-paper: #ffffff;
-  --color-steel: #5b6b7f;
-  --color-ice: #eaf1f8;
-  --color-skyline: #8fb8e8;
+  --color-navy: #163e73;
+  --color-royal: #0b4da2;
+  --color-peri: #5b7fc0;
+  --color-ink: #0a0f1c;
+  --color-mist: #f4f7fb;
 
-  /* Aliases kept so the untouched admin/auth components still resolve. */
-  --color-brand-blue: #0b4ea2;
-  --color-deep-blue: #05367b;
-  --color-muted: #5b6b7f;
-  --color-soft: #f5f7fa;
-  --color-light-blue: #eaf1f8;
-  --color-white: #ffffff;
+  --font-display: var(--font-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), 'Manrope', ui-sans-serif, system-ui, sans-serif;
 
-  --font-display: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-serif-accent), "Instrument Serif", Georgia, serif;
+  --radius-card: 24px;
 }
 
-/* One container: max-w-7xl, px-5 on mobile, px-8 from md up. */
-@utility wrap {
-  width: 100%;
-  max-width: 80rem;
-  margin-inline: auto;
-  padding-inline: 1.25rem;
-
-  @media (min-width: 768px) {
-    padding-inline: 2rem;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #0a0f1c;
 }
 
-/* One section rhythm: py-24 / md:py-32 / lg:py-40. */
-@utility section-pad {
-  padding-block: 6rem;
-
-  @media (min-width: 768px) {
-    padding-block: 8rem;
-  }
-
-  @media (min-width: 1024px) {
-    padding-block: 10rem;
-  }
-}
-
-@utility eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-@utility serif-accent {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-@utility outline-word {
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(255 255 255 / 0.4);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
+/* Dark-mode base tokens. Full dark styling lands with later agents;
+   this only makes the next-themes provider + base colours work. */
+.dark {
+  --background: #070d1a;
+  --foreground: #f4f7fb;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
 }
 
+/* ---- Design-system additions (layout agent) ---- */
+
 ::selection {
-  background: var(--color-navy);
+  background: #0b4da2;
   color: #fff;
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #0b4da2 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0b4da2;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-royal);
+  outline: 2px solid #0b4da2;
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* Editorial article text (blog + case-study detail pages). */
-.article-content p {
-  margin-top: 1rem;
-  color: #475569;
-  font-size: 1.05rem;
-  line-height: 1.9;
+.text-balance {
+  text-wrap: balance;
 }
 
-.article-content h2 {
-  margin-top: 2.5rem;
-  color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-
-/* Floating-label fields: label moves with transform only. */
-.field {
-  position: relative;
-}
-
-.field > input,
-.field > textarea {
-  width: 100%;
-  border: 1px solid #d7dee8;
-  border-radius: 0.75rem;
-  background: #fff;
-  padding: 1.55rem 1rem 0.6rem;
-  font-size: 0.9375rem;
-  color: var(--color-ink);
-  outline: none;
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.field > input:focus,
-.field > textarea:focus {
-  border-color: var(--color-royal);
-  box-shadow: 0 0 0 3px rgb(11 78 162 / 0.18);
-}
-
-.field > label {
-  position: absolute;
-  left: 1rem;
-  top: 1.05rem;
-  font-size: 0.9375rem;
-  color: var(--color-steel);
-  pointer-events: none;
-  transform-origin: left top;
-  transition:
-    transform 0.25s ease,
-    color 0.25s ease;
-}
-
-.field > input:focus + label,
-.field > input:not(:placeholder-shown) + label,
-.field > textarea:focus + label,
-.field > textarea:not(:placeholder-shown) + label {
-  transform: translateY(-0.62rem) scale(0.78);
-  color: var(--color-royal);
-}
-
-/* Scroll cue line in the hero — transform only. */
-@keyframes cue-drop {
-  0% {
-    transform: translateY(-100%);
+/* Marquee loop: track is translated -50% (content duplicated once). */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+.marquee-paused:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Film-grain drift (subtle stepped shift). */
+@keyframes grain-shift {
+  0%,
   100% {
-    transform: translateY(100%);
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-2%, 2%);
+  }
+  40% {
+    transform: translate(2%, -1%);
+  }
+  60% {
+    transform: translate(-1%, -2%);
+  }
+  80% {
+    transform: translate(1%, 2%);
   }
 }
 
-.cue-line {
-  animation: cue-drop 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+.grain-overlay {
+  animation: grain-shift 9s steps(6) infinite;
 }
 
+/* Hide the native cursor while the custom cursor is active. */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* Glassmorphism. */
+.glass {
+  background: rgb(255 255 255 / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(255 255 255 / 0.4);
+}
+
+.dark .glass {
+  background: rgb(10 15 28 / 0.55);
+  border-color: rgb(255 255 255 / 0.12);
+}
+
+/* Diagonal-stripe motif in brand blues, low opacity. */
+.stripe-bg {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(11 77 162 / 0.06) 0 1px,
+    transparent 1px 14px
+  );
+}
+
+.stripe-divider {
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(11 77 162 / 0.35) 0 12px,
+    transparent 12px 24px
+  );
+}
+
+/* Footer giant wordmark: outlined letters that fill white on hover. */
+.wordmark-outline {
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.45);
+  color: transparent;
+  transition:
+    color 0.3s ease,
+    -webkit-text-stroke-color 0.3s ease;
+}
+
+.wordmark-outline:hover {
+  color: #fff;
+  -webkit-text-stroke-color: transparent;
+}
+
+/* cmdk command palette (unstyled by default — styled here). */
+[cmdk-dialog] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14vh 1rem 1rem;
+}
+
+[cmdk-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgb(10 15 28 / 0.6);
+  backdrop-filter: blur(4px);
+}
+
+[cmdk-input] {
+  border: 0;
+  background: transparent;
+}
+
+[cmdk-input]:focus {
+  outline: none;
+}
+
+[cmdk-list] {
+  max-height: min(50vh, 340px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem;
+}
+
+[cmdk-group-heading] {
+  padding: 0.75rem 0.75rem 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(10 15 28 / 0.45);
+}
+
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #0a0f1c;
+}
+
+[cmdk-item][data-selected='true'] {
+  background: #f4f7fb;
+}
+
+[cmdk-item][data-disabled='true'] {
+  opacity: 0.5;
+}
+
+[cmdk-empty] {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgb(10 15 28 / 0.5);
+}
+
+.dark [cmdk-group-heading] {
+  color: rgb(255 255 255 / 0.45);
+}
+
+.dark [cmdk-item] {
+  color: #f4f7fb;
+}
+
+.dark [cmdk-item][data-selected='true'] {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.dark [cmdk-empty] {
+  color: rgb(255 255 255 / 0.5);
+}
+
+/* Reduced motion: kill animations/transitions globally. */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-marquee,
+  .grain-overlay {
+    animation: none !important;
   }
 }

@@ -1,12 +1,16 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
+  cacheComponents: true,
+  partialPrefetching: true,
   turbopack: {
-    root: process.cwd(),
     rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
+      '*.css': {
+        loaders: ['@tailwindcss/turbopack'],
+        as: '*.css',
       },
     },
   },

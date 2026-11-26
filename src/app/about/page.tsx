@@ -1,237 +1,277 @@
-import { Check } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image";
-import { CtaBand } from "@/components/site/cta-band";
-import { Reveal } from "@/components/motion/reveal";
-import { PageIntro } from "@/components/site/page-intro";
-import { SectionHead } from "@/components/site/section-head";
-
-const VALUES = [
-  ["Curiosity", "We ask good questions before reaching for easy answers."],
-  ["Clarity", "We make the complex easier to understand and act on."],
-  ["Craft", "We care about the thinking and the details in equal measure."],
-  ["Collaboration", "The best work happens when people build it together."],
-  ["Purpose", "Every creative choice should have a reason behind it."],
-  ["Momentum", "We focus on progress your team can carry forward."],
-];
-
-const DISCIPLINES = [
-  {
-    number: "01",
-    title: "Strategy",
-    text: "Research, direction, positioning, and the questions that shape a useful brief.",
-  },
-  {
-    number: "02",
-    title: "Design",
-    text: "Brand identity, digital experiences, visual systems, and thoughtful creative.",
-  },
-  {
-    number: "03",
-    title: "Technology",
-    text: "Responsive development, accessible foundations, and practical integrations.",
-  },
-  {
-    number: "04",
-    title: "Growth",
-    text: "Search, social, content, and campaigns that give the work a way forward.",
-  },
-];
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { tools } from '@/data/tools';
+import { siteConfig } from '@/data/site-config';
 
 export const metadata: Metadata = {
-  title: "About ADD Creatives",
+  title: 'About Us | ADD Creatives',
   description:
-    "Meet ADD Creatives, a Lahore-based creative and digital agency connecting strategy, design, technology, and marketing.",
-  alternates: {
-    canonical: "/about",
+    'ADD Creatives is a digital agency in Lahore, Pakistan. Learn about our story, mission, values, and how we work — Discover, Define, Create, Evolve.',
+  openGraph: {
+    title: 'About Us | ADD Creatives',
+    description:
+      'ADD Creatives is a digital agency in Lahore, Pakistan. Learn about our story, mission, values, and how we work.',
   },
 };
 
+const VALUES = [
+  {
+    title: 'Honesty first',
+    text: 'We say what a project will cost, how long it will take, and what it will not do — before you commit.',
+  },
+  {
+    title: 'Work that earns its keep',
+    text: 'Design and marketing should bring enquiries and sales, not just look good in a portfolio.',
+  },
+  {
+    title: 'Plain language',
+    text: 'No jargon, no mystery. You always know what we are doing and why.',
+  },
+  {
+    title: 'One team, start to finish',
+    text: 'The people who design your site are the people who build it and help it grow.',
+  },
+  {
+    title: 'Built to last',
+    text: 'We choose solid tools and clean work over shortcuts that break in six months.',
+  },
+  {
+    title: 'Your business, your assets',
+    text: 'You own your website, brand files, and content. We hand everything over at launch.',
+  },
+];
+
+const PRINCIPLES = [
+  {
+    title: 'Start with the goal',
+    text: 'Every project begins with what success looks like for your business — not with a template or a trend.',
+  },
+  {
+    title: 'Show, don’t just tell',
+    text: 'You see designs and working pages early, while changes are still cheap and easy.',
+  },
+  {
+    title: 'Small steps, weekly updates',
+    text: 'Work moves in short steps with a weekly update, so there are no surprises at the end.',
+  },
+  {
+    title: 'Measure what matters',
+    text: 'After launch we look at real behaviour — enquiries, sales, and search visibility — and improve from there.',
+  },
+];
+
+const PROCESS = [
+  {
+    step: 'Discover',
+    text: 'We listen: your goals, your customers, and what is working — and what is not — today.',
+  },
+  {
+    step: 'Define',
+    text: 'We agree on scope, timeline, and a fixed price, so everyone knows what is being built.',
+  },
+  {
+    step: 'Create',
+    text: 'We design and build in the open, sharing progress and gathering your feedback as we go.',
+  },
+  {
+    step: 'Evolve',
+    text: 'We launch, measure, and keep improving — because a website is never really finished.',
+  },
+];
+
+// TODO: Replace with real team members once bios and photos are confirmed.
+// These placeholder cards are intentionally marked "coming soon" in the UI.
+const TEAM_PLACEHOLDERS = [
+  { initials: 'AK', role: 'Founder & Developer' },
+  { initials: 'TM', role: 'Designer' },
+  { initials: 'TM', role: 'Marketing' },
+];
+
 export default function AboutPage() {
   return (
-    <main>
-      <PageIntro
-        eyebrow="About ADD Creatives"
-        title={
-          <>
-            A <span className="serif-accent text-royal">thoughtful</span>{" "}
-            partner for your next digital step.
-          </>
-        }
-        description="We are a creative and digital agency based in Lahore. We help businesses find a clear direction, show up with confidence, and move forward online."
-        image="/images/creative-collaboration.jpg"
-        imageAlt="People reviewing creative work together around a laptop; illustrative stock photography, not ADD Creatives staff."
-        imageNote="Illustrative stock image — not a photograph of the ADD Creatives team."
-      />
-
-      <section className="pb-24 md:pb-32 lg:pb-40">
-        <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
-          <Reveal>
-            <p className="eyebrow text-royal">Our approach</p>
-            <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-4xl">
-              Make the complicated feel{" "}
-              <span className="serif-accent text-royal">clear.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.06}>
-            <div className="space-y-5 text-base leading-7 text-steel sm:text-lg sm:leading-8">
-              <p>
-                Strong brands are built on more than a good-looking website.
-                They need clear thinking, useful creative, and a consistent
-                experience wherever people meet the business.
-              </p>
-              <p>
-                ADD Creatives connects strategy, design, development, and
-                marketing. We listen first, build a practical direction
-                together, and make work your team can confidently put into the
-                world.
-              </p>
-              <p>
-                We are based in Lahore, Pakistan, and work with businesses
-                looking for a thoughtful partner to take their next digital
-                step.
-              </p>
-            </div>
-          </Reveal>
+    <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
+      {/* Hero / story */}
+      <section className="bg-mist px-6 py-16 sm:py-24 dark:bg-ink">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-royal">
+            About ADD Creatives
+          </p>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+            A small agency with a simple job: help your business grow online
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg text-ink/70 dark:text-white/70">
+            ADD Creatives is a digital agency based in Lahore, Pakistan. We design and
+            build websites, brands, and campaigns for businesses in Pakistan and
+            abroad — from a first website for a new business to a full online store
+            for an established brand.
+          </p>
+          <p className="mt-4 max-w-3xl text-ink/70 dark:text-white/70">
+            We started because we kept seeing the same problem: good businesses with
+            websites that did not reflect their quality, and marketing that was hard
+            to understand or measure. So we built an agency that keeps things clear —
+            one team, plain language, and work you can see working.
+          </p>
         </div>
       </section>
 
-      <section className="bg-navy py-20 text-white md:py-28">
-        <div className="wrap grid gap-10 md:grid-cols-2 md:gap-16">
-          {[
-            {
-              eyebrow: "Our mission",
-              title: "Make good ideas easier to understand, choose, and grow.",
-              text: "We bring sharp thinking and considered creative together so businesses can show up clearly and make their next move with confidence.",
-            },
-            {
-              eyebrow: "Our vision",
-              title: "A digital world with more useful, human experiences.",
-              text: "We want to help build brands and products that respect people's time, answer real needs, and make a positive difference for the teams behind them.",
-            },
-          ].map((item) => (
-            <Reveal key={item.eyebrow}>
-              <div className="border-t border-white/25 pt-6">
-                <p className="eyebrow text-skyline">{item.eyebrow}</p>
-                <h2 className="mt-5 font-display text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-                  {item.title}
-                </h2>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-white/70">
-                  {item.text}
+      {/* Mission */}
+      <section aria-labelledby="mission-heading" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl rounded-3xl bg-navy px-6 py-10 text-white sm:px-12">
+          <h2 id="mission-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Our mission
+          </h2>
+          <p className="mt-4 max-w-3xl text-lg text-white/85">
+            {siteConfig.tagline} — by giving every business, large or small, a
+            website, brand, and marketing setup that is honest, well-built, and easy
+            to measure.
+          </p>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section aria-labelledby="values-heading" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 id="values-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            What we stand for
+          </h2>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {VALUES.map((value) => (
+              <li
+                key={value.title}
+                className="rounded-3xl border border-ink/10 p-6 dark:border-white/10"
+              >
+                <h3 className="font-display text-xl font-bold">{value.title}</h3>
+                <p className="mt-2 text-ink/70 dark:text-white/70">{value.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Working principles */}
+      <section
+        aria-labelledby="principles-heading"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 id="principles-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            How we work with you
+          </h2>
+          <ol className="mt-8 grid gap-6 sm:grid-cols-2">
+            {PRINCIPLES.map((principle, index) => (
+              <li key={principle.title} className="flex gap-4">
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-sm font-bold text-white"
+                >
+                  {index + 1}
+                </span>
+                <div>
+                  <h3 className="pt-1 font-display text-lg font-bold">{principle.title}</h3>
+                  <p className="mt-1 text-ink/70 dark:text-white/70">{principle.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Process */}
+      <section aria-labelledby="process-heading" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 id="process-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Our process
+          </h2>
+          <ol className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {PROCESS.map((item, index) => (
+              <li
+                key={item.step}
+                className="rounded-3xl border border-ink/10 p-6 dark:border-white/10"
+              >
+                <span className="font-display text-sm font-semibold uppercase tracking-wide text-royal">
+                  Step {index + 1}
+                </span>
+                <h3 className="mt-2 font-display text-xl font-bold">{item.step}</h3>
+                <p className="mt-2 text-sm text-ink/70 dark:text-white/70">{item.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Tools strip */}
+      <section aria-labelledby="tools-heading" className="px-6 pb-12 sm:pb-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 id="tools-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Tools we work with
+          </h2>
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {tools.map((tool) => (
+              <li
+                key={tool.name}
+                className="rounded-full bg-mist px-4 py-2 text-sm font-semibold text-navy dark:bg-white/10 dark:text-white"
+              >
+                {tool.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Team placeholder */}
+      <section
+        aria-labelledby="team-heading"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 id="team-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Meet the team
+          </h2>
+          <p className="mt-2 text-ink/70 dark:text-white/70">
+            Team — coming soon. We are putting together proper introductions for the
+            people behind the work.
+          </p>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+            {TEAM_PLACEHOLDERS.map((member, index) => (
+              <li
+                key={`${member.role}-${index}`}
+                className="rounded-3xl border border-dashed border-ink/20 bg-white p-6 text-center dark:border-white/20 dark:bg-white/5"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-mist font-display text-2xl font-bold text-navy dark:bg-white/10 dark:text-white"
+                >
+                  {member.initials}
+                </span>
+                <p className="mt-4 font-display text-lg font-bold">Team member</p>
+                <p className="text-sm text-ink/60 dark:text-white/60">{member.role}</p>
+                <p className="mt-2 inline-block rounded-full bg-mist px-3 py-1 text-xs font-semibold text-royal dark:bg-white/10">
+                  Coming soon
                 </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad">
-        <div className="wrap">
-          <SectionHead
-            eyebrow="What guides us"
-            title={
-              <>
-                The values{" "}
-                <span className="serif-accent text-royal">behind the work.</span>
-              </>
-            }
-            description="A few simple principles keep our work focused and our partnerships honest, from the first conversation through delivery."
-          />
-          <div className="border-b border-slate-300">
-            {VALUES.map(([title, text], index) => (
-              <Reveal key={title} delay={index * 0.03}>
-                <div className="group grid gap-2 border-t border-slate-300 py-7 transition-all duration-300 hover:bg-mist sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
-                  <span className="font-mono text-sm font-semibold text-royal">
-                    0{index + 1}
-                  </span>
-                  <h3 className="font-display text-xl font-semibold text-ink transition-transform duration-300 group-hover:translate-x-1.5 sm:text-2xl">
-                    {title}
-                  </h3>
-                  <p className="text-sm leading-6 text-steel sm:text-base">{text}</p>
-                </div>
-              </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      <section className="section-pad border-t border-slate-200 bg-mist">
-        <div className="wrap">
-          <SectionHead
-            eyebrow="How we think"
-            title={
-              <>
-                Different strengths.{" "}
-                <span className="serif-accent text-royal">One shared direction.</span>
-              </>
-            }
-            description="The right mix of skills depends on the brief. We bring connected disciplines together when they help move the work forward."
-          />
-          <div className="border-b border-slate-300">
-            {DISCIPLINES.map((item) => (
-              <Reveal key={item.number}>
-                <div className="group grid gap-2 border-t border-slate-300 bg-mist py-7 transition-colors duration-300 hover:bg-white sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
-                  <span className="font-mono text-sm font-semibold text-royal">
-                    {item.number}
-                  </span>
-                  <h3 className="font-display text-xl font-semibold text-ink transition-transform duration-300 group-hover:translate-x-1.5 sm:text-2xl">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm leading-6 text-steel sm:text-base">{item.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+      {/* CTA */}
+      <section className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl rounded-3xl bg-navy px-6 py-12 text-center text-white sm:px-12">
+          <h2 className="font-display text-2xl font-bold sm:text-3xl">
+            Want to work with us?
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-white/80">
+            Tell us about your business — we reply within one working day.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            Get in touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
       </section>
-
-      <section className="section-pad">
-        <div className="wrap grid items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
-          <Reveal>
-            <figure>
-              <div className="relative aspect-[1.4] overflow-hidden rounded-xl bg-ice">
-                <Image
-                  alt="A notebook with interface sketches and planning notes, shown as illustrative stock photography."
-                  src="/images/digital-studio.jpg"
-                  fill
-                  quality={75}
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="object-cover transition-transform duration-500 hover:scale-[1.03]"
-                />
-              </div>
-              <figcaption className="mt-2 text-xs text-steel">
-                Illustrative stock image, not ADD Creatives client work.
-              </figcaption>
-            </figure>
-          </Reveal>
-          <Reveal delay={0.06}>
-            <p className="eyebrow text-royal">Working together</p>
-            <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-4xl">
-              A thoughtful partner, not another layer of{" "}
-              <span className="serif-accent text-royal">process.</span>
-            </h2>
-            <p className="mt-4 text-base leading-7 text-steel">
-              We keep the work human: clear conversations, honest feedback, and
-              enough structure to make good decisions without slowing ideas
-              down.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "You know what is happening and what comes next.",
-                "The work connects back to the goal we agreed together.",
-                "You leave with useful tools and a clear way forward.",
-              ].map((text) => (
-                <li className="flex items-start gap-3 text-sm leading-6 text-ink" key={text}>
-                  <Check aria-hidden="true" className="mt-0.5 shrink-0 text-royal" size={17} />
-                  {text}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
-
-      <CtaBand />
     </main>
   );
 }

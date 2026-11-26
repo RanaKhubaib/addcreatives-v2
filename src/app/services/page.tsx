@@ -1,101 +1,58 @@
-import type { Metadata } from "next";
-import { CtaBand } from "@/components/site/cta-band";
-import { Reveal } from "@/components/motion/reveal";
-import { PageIntro } from "@/components/site/page-intro";
-import { SectionHead } from "@/components/site/section-head";
-import { ServiceCards } from "@/components/site/service-cards";
-import { siteConfig } from "@/data/site-config";
-
-const CONNECTIONS = [
-  {
-    number: "01",
-    title: "A clear foundation",
-    text: "Strategy and brand direction help every later decision stay connected to the audience and purpose.",
-  },
-  {
-    number: "02",
-    title: "A useful experience",
-    text: "Design, development, and content make it easier for people to understand the offer and take a next step.",
-  },
-  {
-    number: "03",
-    title: "A way to learn",
-    text: "Search, social, and paid campaigns create opportunities to share the work and learn from real response.",
-  },
-];
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { services } from '@/data/services';
+import ServicesFilter from './services-filter';
 
 export const metadata: Metadata = {
-  title: "Creative and Digital Services | ADD Creatives",
+  title: 'Our Services | ADD Creatives',
   description:
-    "Explore web design, SEO, social media, branding, paid ads, and content services from ADD Creatives.",
-  alternates: {
-    canonical: "/services",
+    'Web development, e-commerce, SEO, social media, paid advertising, branding, and content creation — digital services built around your goals.',
+  openGraph: {
+    title: 'Our Services | ADD Creatives',
+    description:
+      'Web development, e-commerce, SEO, social media, paid advertising, branding, and content creation — digital services built around your goals.',
   },
 };
 
 export default function ServicesPage() {
   return (
-    <main>
-      <PageIntro
-        eyebrow="Services"
-        title={
-          <>
-            Creative and digital services built{" "}
-            <span className="serif-accent text-royal">around your goals.</span>
-          </>
-        }
-        description="Build a stronger digital presence with a team that connects strategy, creative, and technology around your goals. Every service can stand on its own — when a brief needs more than one discipline, we connect the work around a shared direction."
-        image="/images/digital-product.jpg"
-        imageAlt="A desktop monitor and tablet displaying digital interface designs; illustrative stock photography."
-        imageNote="Illustrative stock image — not a client website or ADD Creatives project."
-      />
-
-      <section className="pb-24 md:pb-32 lg:pb-40">
-        <div className="wrap">
-          <SectionHead
-            eyebrow="What we can do together"
-            title={
-              <>
-                Choose the right{" "}
-                <span className="serif-accent text-royal">next step.</span>
-              </>
-            }
-          />
-          <ServiceCards services={siteConfig.services} />
+    <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
+      <section className="bg-mist px-6 py-16 sm:py-24 dark:bg-ink">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-royal">
+            What we do
+          </p>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+            Services that help your business grow
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-ink/70 dark:text-white/70">
+            Every service is delivered by one small team, so nothing gets lost between
+            design, development, and marketing. Pick a service to see what is included,
+            or tell us about your project and we will recommend the right mix.
+          </p>
         </div>
       </section>
 
-      <section className="section-pad border-t border-slate-200 bg-mist">
-        <div className="wrap">
-          <SectionHead
-            eyebrow="Connected thinking"
-            title={
-              <>
-                One clear direction,{" "}
-                <span className="serif-accent text-royal">carried through.</span>
-              </>
-            }
-            description="Services are most useful when they support one another. We keep the plan focused on what your audience and business need."
-          />
-          <div className="border-b border-slate-300">
-            {CONNECTIONS.map((item, index) => (
-              <Reveal key={item.number} delay={index * 0.04}>
-                <div className="group grid gap-2 border-t border-slate-300 py-7 transition-colors duration-300 hover:bg-white sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
-                  <span className="font-mono text-sm font-semibold text-royal">
-                    {item.number}
-                  </span>
-                  <h3 className="font-display text-xl font-semibold text-ink transition-transform duration-300 group-hover:translate-x-1.5 sm:text-2xl">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm leading-6 text-steel sm:text-base">{item.text}</p>
-                </div>
-              </Reveal>
-            ))}
+      <section aria-label="All services" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <ServicesFilter services={services} />
+          <div className="mt-12 rounded-3xl bg-navy px-6 py-10 text-center text-white sm:px-12">
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">
+              Not sure which service you need?
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-white/80">
+              Tell us about your business and your goals. We will recommend the simplest
+              option that gets the job done — even if that means a smaller project.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-6 inline-block rounded-full bg-white px-6 py-3 font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Start a project
+            </Link>
           </div>
         </div>
       </section>
-
-      <CtaBand />
     </main>
   );
 }

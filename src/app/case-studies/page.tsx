@@ -1,50 +1,41 @@
-import type { Metadata } from "next";
-import { CtaBand } from "@/components/site/cta-band";
-import { PageIntro } from "@/components/site/page-intro";
-import { WorkEditorial } from "@/components/site/work-editorial";
-import { getCaseStudies } from "@/lib/content";
-
-export const revalidate = 60;
+import type { Metadata } from 'next';
+import { caseStudies } from '@/data/case-studies';
+import CaseStudiesFilter from './case-studies-filter';
 
 export const metadata: Metadata = {
-  title: "Case Studies | ADD Creatives",
+  title: 'Case Studies | ADD Creatives',
   description:
-    "Explore the thinking behind ADD Creatives projects and illustrative concepts.",
-  alternates: {
-    canonical: "/case-studies",
+    'Illustrative concepts showing how ADD Creatives approaches branding, e-commerce, and campaigns — from challenge to outcome.',
+  openGraph: {
+    title: 'Case Studies | ADD Creatives',
+    description:
+      'Illustrative concepts showing how ADD Creatives approaches branding, e-commerce, and campaigns — from challenge to outcome.',
   },
 };
 
-export default async function CaseStudiesPage() {
-  const caseStudies = await getCaseStudies();
-
+export default function CaseStudiesPage() {
   return (
-    <main>
-      <PageIntro
-        eyebrow="Case studies"
-        title={
-          <>
-            The thinking{" "}
-            <span className="serif-accent text-royal">behind the work.</span>
-          </>
-        }
-        description="A look at how clear strategy and thoughtful creative can shape stronger digital experiences. Sample concepts are labelled while client work is being prepared."
-        image="/images/campaign-workshop.jpg"
-        imageAlt="A team reviewing campaign materials around a table; illustrative stock photography, not a client project."
-        imageNote="Illustrative stock image — not completed client work."
-      />
-      <section className="pb-24 md:pb-32 lg:pb-40">
-        <div className="wrap">
-          {caseStudies.some((study) => study.isSample) ? (
-            <div className="mb-12 border-l-2 border-royal bg-ice px-5 py-4 text-sm leading-6 text-navy">
-              Items marked as illustrative concepts are not completed client
-              projects or verified results.
-            </div>
-          ) : null}
-          <WorkEditorial studies={caseStudies} />
+    <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
+      <section className="bg-mist px-6 py-16 sm:py-24 dark:bg-ink">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-royal">
+            Our work
+          </p>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+            Case studies
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-ink/70 dark:text-white/70">
+            These are illustrative concepts — sample projects that show how we think,
+            plan, and deliver. Real client work will be added here as it is published.
+          </p>
         </div>
       </section>
-      <CtaBand />
+
+      <section aria-label="Case studies" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <CaseStudiesFilter studies={caseStudies} />
+        </div>
+      </section>
     </main>
   );
 }

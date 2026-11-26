@@ -1,19 +1,13 @@
-import { ArrowRight } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { CtaBand } from "@/components/site/cta-band";
-import { Reveal } from "@/components/motion/reveal";
-import { PageIntro } from "@/components/site/page-intro";
-import { getCaseStudies, getCaseStudyBySlug } from "@/lib/content";
-
-export const revalidate = 60;
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { caseStudies, getCaseStudyBySlug } from '@/data/case-studies';
+import BeforeAfterSlider from './before-after-slider';
 
 export function generateStaticParams() {
-  return getCaseStudies().then((studies) =>
-    studies.map((study) => ({ slug: study.slug })),
-  );
+  return caseStudies.map((study) => ({ slug: study.slug }));
 }
 
 export async function generateMetadata({
@@ -22,162 +16,194 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const study = await getCaseStudyBySlug(slug);
-  if (!study) return {};
+  const study = getCaseStudyBySlug(slug);
+  if (!study) return { title: 'Case study not found | ADD Creatives' };
   return {
     title: `${study.title} | ADD Creatives`,
     description: study.excerpt,
-    alternates: {
-      canonical: `/case-studies/${study.slug}`,
+    openGraph: {
+      title: `${study.title} | ADD Creatives`,
+      description: study.excerpt,
     },
   };
 }
 
-export default async function CaseStudyPage({
+export default async function CaseStudyDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const study = await getCaseStudyBySlug(slug);
+  const study = getCaseStudyBySlug(slug);
   if (!study) notFound();
 
-  const studies = await getCaseStudies();
-  const relatedStudies = studies.filter((item) => item.slug !== study.slug);
+  const index = caseStudies.findIndex((item) => item.slug === study.slug);
+  const next = caseStudies[(index + 1) % caseStudies.length];
+  const beforeSrc = study.gallery[1] ?? study.image;
+  const afterSrc = study.gallery[0] ?? study.image;
 
   return (
-    <main>
-      <PageIntro
-        eyebrow={study.isSample ? "Sample concept" : "Case study"}
-        title={study.title}
-        description={study.excerpt}
-        back={{ label: "All case studies", href: "/case-studies" }}
-        image={study.coverImage}
-        imageAlt={study.coverImageAlt}
-        imageNote={
-          study.isSample
-            ? "Illustrative stock image — not completed client work."
-            : undefined
-        }
-      />
+    <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
+      {/* Illustrative concept banner */}
+      <div className="bg-navy px-6 py-3 text-center text-sm font-semibold text-white">
+        Illustrative concept — a sample project showing how we work, not a real client
+        engagement.
+      </div>
 
-      <section className="pb-24 md:pb-32 lg:pb-40">
-        <div className="wrap">
-          {study.isSample ? (
-            <div className="mb-10 border-l-2 border-royal bg-ice px-5 py-4 text-sm leading-6 text-navy">
-              This is an illustrative concept created for the website. It is
-              not a completed client project or a verified performance result.
-            </div>
-          ) : null}
-
-          <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
-            <Reveal>
-              <aside className="space-y-6 border-y border-slate-300 py-6 lg:sticky lg:top-28">
-                <Info label="Project" value={study.client} />
-                <Info label="Industry" value={study.industry} />
-                <div>
-                  <p className="text-[0.625rem] font-bold uppercase tracking-[0.16em] text-steel">
-                    Disciplines
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {study.services.map((service) => (
-                      <span
-                        key={service}
-                        className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-navy"
-                      >
-                        {service}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="border-l-2 border-royal bg-ice p-4">
-                  <p className="text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-royal">
-                    {study.isSample ? "Concept direction" : "Project outcome"}
-                  </p>
-                  <p className="mt-2 text-sm font-bold leading-6 text-navy">
-                    {study.result}
-                  </p>
-                </div>
-              </aside>
-            </Reveal>
-
-            <div className="max-w-3xl">
-              {study.sections.map((section, index) => (
-                <Reveal key={section.heading} delay={index * 0.04}>
-                  <section className="mb-12">
-                    <p className="font-mono text-xs font-semibold text-royal">
-                      0{index + 1}
-                    </p>
-                    <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                      {section.heading}
-                    </h2>
-                    <p className="mt-3 text-base leading-8 text-steel">{section.body}</p>
-                  </section>
-                </Reveal>
-              ))}
-
-              <Reveal>
-                <div className="rounded-2xl bg-deep p-7 text-white sm:p-9">
-                  <h2 className="font-display text-2xl font-semibold tracking-tight">
-                    Have a challenge like this?
-                  </h2>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-white/70">
-                    Tell us what you are working on and we will help you find
-                    a clear next step.
-                  </p>
-                  <div className="mt-6">
-                    <Button href="/contact" variant="light">
-                      Start a conversation <ArrowRight aria-hidden="true" size={16} />
-                    </Button>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+      {/* Hero */}
+      <section className="bg-mist px-6 py-16 sm:py-20 dark:bg-ink">
+        <div className="mx-auto max-w-6xl">
+          <Link
+            href="/case-studies"
+            className="inline-flex items-center gap-2 font-semibold text-royal hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All case studies
+          </Link>
+          <p className="mt-6 font-display text-sm font-semibold uppercase tracking-[0.25em] text-royal">
+            {study.category} · {study.year}
+          </p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+            {study.title}
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-ink/70 dark:text-white/70">
+            {study.excerpt}
+          </p>
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {study.tags.map((tag) => (
+              <li
+                key={tag}
+                className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-navy dark:bg-white/10 dark:text-white"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <div className="relative mt-10 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+            <Image
+              src={study.image}
+              alt={study.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 66vw"
+              quality={75}
+              priority
+              className="object-cover"
+            />
           </div>
-
-          {relatedStudies.length > 0 ? (
-            <div className="mt-20 border-t border-slate-300 pt-10">
-              <p className="eyebrow text-royal">Keep exploring</p>
-              <div className="mt-6 border-b border-slate-300">
-                {relatedStudies.map((related, index) => (
-                  <Link
-                    key={related.slug}
-                    href={`/case-studies/${related.slug}`}
-                    className="group flex items-center justify-between gap-4 border-t border-slate-300 py-5"
-                  >
-                    <span className="flex items-baseline gap-4">
-                      <span className="font-mono text-xs font-semibold text-royal">
-                        0{index + 1}
-                      </span>
-                      <span className="font-display text-lg font-semibold text-ink transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-royal sm:text-xl">
-                        {related.title}
-                      </span>
-                    </span>
-                    <ArrowRight
-                      aria-hidden="true"
-                      size={18}
-                      className="shrink-0 text-royal transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ) : null}
         </div>
       </section>
 
-      <CtaBand />
-    </main>
-  );
-}
+      {/* Challenge / Approach */}
+      <section className="px-6 py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
+          <div>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">The challenge</h2>
+            <p className="mt-4 text-ink/80 dark:text-white/80">{study.challenge}</p>
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">Our approach</h2>
+            <p className="mt-4 text-ink/80 dark:text-white/80">{study.approach}</p>
+          </div>
+        </div>
+      </section>
 
-function Info({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-[0.625rem] font-bold uppercase tracking-[0.16em] text-steel">
-        {label}
-      </p>
-      <p className="mt-1.5 text-sm font-semibold text-ink">{value}</p>
-    </div>
+      {/* Deliverables + outcomes */}
+      <section
+        aria-label="Deliverables and outcomes"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
+          <div>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">What we delivered</h2>
+            <ul className="mt-6 space-y-3">
+              {study.deliverables.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-bold sm:text-3xl">Outcomes</h2>
+            <ul className="mt-6 space-y-3">
+              {study.outcomes.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-sm text-ink/60 dark:text-white/60">
+              Outcomes are described in plain words — this concept has no measured
+              results to report.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section aria-labelledby="gallery-heading" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 id="gallery-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Gallery
+          </h2>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {study.gallery.map((src, i) => (
+              <li key={src} className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl">
+                <Image
+                  src={src}
+                  alt={`${study.title} — concept image ${i + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  quality={75}
+                  className="object-cover"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Before / after concept preview */}
+      <section
+        aria-labelledby="compare-heading"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto max-w-4xl">
+          <h2 id="compare-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Concept preview
+          </h2>
+          <p className="mt-2 text-ink/70 dark:text-white/70">
+            A before-and-after style comparison using two images from this concept.
+          </p>
+          <div className="mt-8">
+            <BeforeAfterSlider beforeSrc={beforeSrc} afterSrc={afterSrc} />
+          </div>
+        </div>
+      </section>
+
+      {/* Next project + CTA */}
+      <section className="px-6 py-12 sm:py-16">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-royal">
+              Next concept
+            </p>
+            <Link
+              href={`/case-studies/${next.slug}`}
+              className="mt-2 inline-flex items-center gap-2 font-display text-2xl font-bold hover:text-royal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
+            >
+              {next.title} <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          </div>
+          <Link
+            href="/contact"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 font-semibold text-white transition hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
+          >
+            Start your project <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 }

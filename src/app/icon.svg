@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- ADD Creatives app icon: navy rounded square, diagonal-stripe motif, cursor mark -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#163E73" />
+      <stop offset="1" stop-color="#0B4DA2" />
+    </linearGradient>
+    <clipPath id="r"><rect x="0" y="0" width="64" height="64" rx="14" /></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="url(#bg)" />
+    <g opacity="0.35" stroke="#5B7FC0" stroke-width="5">
+      <line x1="-8" y1="56" x2="24" y2="24" />
+      <line x1="8" y1="72" x2="40" y2="40" />
+      <line x1="40" y1="24" x2="72" y2="-8" />
+    </g>
+    <!-- cursor arrow -->
+    <path d="M20 14 L46 30 L33 33 L28 46 L24 42 L29 29 L20 14 Z" fill="#FFFFFF" />
+  </g>
+</svg>

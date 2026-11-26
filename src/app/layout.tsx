@@ -1,88 +1,86 @@
-import type { Metadata } from "next";
-import { Instrument_Serif, Inter, Manrope } from "next/font/google";
-import type { ReactNode } from "react";
-import { Cursor } from "@/components/site/cursor";
-import { Footer } from "@/components/site/footer";
-import { Nav } from "@/components/site/nav";
-import { siteConfig } from "@/data/site-config";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Bricolage_Grotesque, Manrope } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
+import './globals.css';
+import { CustomCursor } from '@/components/effects/cursor';
+import { GrainOverlay } from '@/components/effects/grain';
+import { LenisProvider } from '@/components/effects/lenis-provider';
+import { RouteTransition } from '@/components/effects/route-transition';
+import { ScrollProgress } from '@/components/effects/scroll-progress';
+import { AmbientSoundToggle } from '@/components/effects/sound-toggle';
+import { CommandPalette } from '@/components/layout/command-palette';
+import { CookieBanner } from '@/components/layout/cookie-banner';
+import { Footer } from '@/components/layout/footer';
+import { Nav } from '@/components/layout/nav';
+import { WhatsAppFloat } from '@/components/layout/whatsapp-float';
 
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
+const display = Bricolage_Grotesque({
+  variable: '--font-display',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
 });
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-serif-accent",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400"],
-  style: ["italic", "normal"],
+const sans = Manrope({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.company.website),
-  title: "ADD Creatives | Digital Solutions That Drive Growth",
+  title: 'ADD Creatives — Digital Solutions That Drive Growth',
   description:
-    "ADD Creatives helps ambitious brands grow with thoughtful digital strategy, creative work, and measurable results.",
+    'ADD Creatives is a digital agency in Lahore, Pakistan. We design and build websites, brands, and campaigns that help businesses grow.',
+  metadataBase: new URL('https://www.addcreatives.com'),
   openGraph: {
-    type: "website",
-    locale: "en_PK",
-    url: siteConfig.company.website,
-    siteName: siteConfig.company.name,
-    title: "ADD Creatives | Digital Solutions That Drive Growth",
+    title: 'ADD Creatives — Digital Solutions That Drive Growth',
     description:
-      "Thoughtful digital strategy, creative work, and measurable growth for ambitious brands.",
+      'ADD Creatives is a digital agency in Lahore, Pakistan. We design and build websites, brands, and campaigns that help businesses grow.',
+    url: 'https://www.addcreatives.com',
+    siteName: 'ADD Creatives',
+    type: 'website',
+    locale: 'en_PK',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "ADD Creatives | Digital Solutions That Drive Growth",
+    card: 'summary_large_image',
+    title: 'ADD Creatives — Digital Solutions That Drive Growth',
     description:
-      "Thoughtful digital strategy, creative work, and measurable growth for ambitious brands.",
+      'ADD Creatives is a digital agency in Lahore, Pakistan. We design and build websites, brands, and campaigns that help businesses grow.',
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const organizationData = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: siteConfig.company.name,
-    url: siteConfig.company.website,
-    email: siteConfig.company.email,
-    telephone: siteConfig.company.phone,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: siteConfig.company.address,
-      addressLocality: "Lahore",
-      addressCountry: "PK",
-    },
-  };
-
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${inter.variable} ${instrumentSerif.variable}`}
+      className={`${display.variable} ${sans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen bg-white font-sans text-ink antialiased">
-        <Cursor />
-        <Nav />
-        {children}
-        <Footer />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationData).replace(/</g, "\\u003c"),
-          }}
-          type="application/ld+json"
-        />
+      <body className="min-h-full bg-white font-sans text-ink dark:bg-ink dark:text-white">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <LenisProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+            >
+              Skip to content
+            </a>
+            <CustomCursor />
+            <GrainOverlay />
+            <ScrollProgress />
+            <Nav />
+            <CommandPalette />
+            {/* Preloader mount point — the preloader component itself comes
+                from another agent and mounts into this element. */}
+            <div id="preloader-root" />
+            <RouteTransition>{children}</RouteTransition>
+            <Footer />
+            <WhatsAppFloat />
+            <CookieBanner />
+            <AmbientSoundToggle />
+          </LenisProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

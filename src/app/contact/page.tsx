@@ -1,154 +1,109 @@
-import { ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { EnquiryForm } from "@/components/site/enquiry-form";
-import { Reveal } from "@/components/motion/reveal";
-import { PageIntro } from "@/components/site/page-intro";
-import { siteConfig } from "@/data/site-config";
-
-const mapQuery = encodeURIComponent(siteConfig.company.address);
+import type { Metadata } from 'next';
+import { Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { siteConfig } from '@/data/site-config';
+import ContactForm from './contact-form';
 
 export const metadata: Metadata = {
-  title: "Contact ADD Creatives",
+  title: 'Contact Us | ADD Creatives',
   description:
-    "Start a project with ADD Creatives. Tell us what you are building, changing, or trying to solve.",
-  alternates: {
-    canonical: "/contact",
+    'Tell ADD Creatives about your project — web development, e-commerce, SEO, branding, or marketing. We reply within one working day.',
+  openGraph: {
+    title: 'Contact Us | ADD Creatives',
+    description:
+      'Tell ADD Creatives about your project — web development, e-commerce, SEO, branding, or marketing. We reply within one working day.',
   },
 };
 
 export default function ContactPage() {
-  return (
-    <main>
-      <PageIntro
-        eyebrow="Contact"
-        title={
-          <>
-            Let&rsquo;s{" "}
-            <span className="serif-accent text-royal">talk.</span>
-          </>
-        }
-        description="Tell us what you are working on or what you would like to change. We will help you find a clear next step."
-      />
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(siteConfig.address)}&output=embed`;
 
-      <section className="pb-24 md:pb-32 lg:pb-40">
-        <div className="wrap grid items-start gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
-          <Reveal>
-            <div className="rounded-2xl bg-navy p-6 text-white sm:p-8 lg:p-9">
-              <p className="eyebrow text-skyline">Get in touch</p>
-              <h2 className="mt-4 font-display text-2xl font-semibold leading-tight tracking-tight">
-                A good conversation is a good place to{" "}
-                <span className="serif-accent text-skyline">start.</span>
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-white/70">
-                Reach out in the way that works for you. We are based in Lahore
-                and happy to talk through your project.
-              </p>
-              <div className="mt-8 space-y-3">
-                <ContactLink
-                  href={`tel:${siteConfig.company.phone.replace(/\s/g, "")}`}
-                  icon={<Phone aria-hidden="true" size={18} />}
-                  label="Call us"
-                  value={siteConfig.company.phone}
-                />
-                <ContactLink
-                  href={`https://wa.me/${siteConfig.company.whatsapp}`}
-                  icon={<MessageCircle aria-hidden="true" size={18} />}
-                  label="WhatsApp"
-                  value="Chat with our team"
-                  external
-                />
-                <ContactLink
-                  href={`mailto:${siteConfig.company.email}`}
-                  icon={<Mail aria-hidden="true" size={18} />}
-                  label="Email"
-                  value={siteConfig.company.email}
-                />
-                <a
-                  className="group flex items-start gap-3 rounded-xl border border-white/15 p-4 text-sm leading-6 text-white transition-colors duration-300 hover:border-skyline/60 hover:bg-white/10"
-                  href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <MapPin aria-hidden="true" className="mt-0.5 shrink-0 text-skyline" size={18} />
-                  <span>
-                    <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-skyline">
-                      Lahore, Pakistan
-                    </span>
-                    <span className="mt-1 block text-sm text-white">
-                      {siteConfig.company.address}
-                    </span>
-                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-white/80">
-                      Open in Google Maps
-                      <ArrowUpRight aria-hidden="true" size={13} />
-                    </span>
-                  </span>
-                </a>
-              </div>
+  return (
+    <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
+      <section className="bg-mist px-6 py-16 sm:py-24 dark:bg-ink">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-display text-sm font-semibold uppercase tracking-[0.25em] text-royal">
+            Get in touch
+          </p>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-bold leading-tight sm:text-5xl">
+            Let&rsquo;s talk about your project
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-ink/70 dark:text-white/70">
+            Tell us what you need in a few sentences. We reply within one working day —
+            usually much faster — with honest next steps and a clear quote.
+          </p>
+        </div>
+      </section>
+
+      <section aria-label="Contact form and office details" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <ContactForm />
+          </div>
+
+          <div className="space-y-6 lg:col-span-2">
+            <div className="rounded-3xl border border-ink/10 p-6 dark:border-white/10">
+              <h2 className="font-display text-xl font-bold">Office</h2>
+              <ul className="mt-4 space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <span>{siteConfig.address}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Phone className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <a
+                    href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}
+                    className="font-semibold text-royal hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
+                  >
+                    {siteConfig.phone}
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Mail className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="font-semibold text-royal hover:text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
+                  >
+                    {siteConfig.email}
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-royal" aria-hidden="true" />
+                  <span>Working hours: {siteConfig.hours}</span>
+                </li>
+              </ul>
             </div>
-            <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200">
+
+            <div className="rounded-3xl bg-navy p-6 text-white">
+              <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+                <MessageCircle className="h-5 w-5" aria-hidden="true" /> Prefer WhatsApp?
+              </h2>
+              <p className="mt-2 text-sm text-white/80">
+                Message us directly — it is the fastest way to reach us during working
+                hours.
+              </p>
+              <a
+                href={siteConfig.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                Chat on WhatsApp ({siteConfig.whatsapp})
+              </a>
+            </div>
+
+            <div className="overflow-hidden rounded-3xl border border-ink/10 dark:border-white/10">
               <iframe
-                className="h-64 w-full"
+                title="Map showing the ADD Creatives office in Lahore"
+                src={mapSrc}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-                title="Map showing ADD Creatives in Lahore"
+                className="h-72 w-full border-0"
+                allowFullScreen
               />
             </div>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <div
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_50px_-38px_rgba(17,65,114,0.45)] sm:p-8 lg:p-10"
-              id="project-enquiry"
-            >
-              <p className="eyebrow text-royal">Project enquiry</p>
-              <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                Tell us a little{" "}
-                <span className="serif-accent text-royal">about it.</span>
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-steel">
-                Share the essentials and we&rsquo;ll get back to you with a useful
-                next step.
-              </p>
-              <div className="mt-8">
-                <EnquiryForm />
-              </div>
-            </div>
-          </Reveal>
+          </div>
         </div>
       </section>
     </main>
-  );
-}
-
-function ContactLink({
-  href,
-  icon,
-  label,
-  value,
-  external = false,
-}: {
-  href: string;
-  icon: ReactNode;
-  label: string;
-  value: string;
-  external?: boolean;
-}) {
-  return (
-    <a
-      className="group flex gap-3 rounded-xl border border-white/15 bg-white/5 p-4 transition-colors duration-300 hover:border-skyline/60 hover:bg-white/10"
-      href={href}
-      rel={external ? "noreferrer" : undefined}
-      target={external ? "_blank" : undefined}
-    >
-      <span className="mt-0.5 shrink-0 text-skyline">{icon}</span>
-      <span>
-        <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-skyline">
-          {label}
-        </span>
-        <span className="mt-1 block text-sm font-semibold text-white">{value}</span>
-      </span>
-    </a>
   );
 }
