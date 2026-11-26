@@ -66,9 +66,14 @@ function RotatingWord() {
     return <span className="text-peri">Growth</span>;
   }
 
+  // mode="wait": the outgoing word exits FULLY (slides up out of the
+  // overflow-hidden mask) before the incoming word mounts. At no frame
+  // do two words share the mask, so they can never overlap or clip each
+  // other mid-transition (the previous popLayout mode let both occupy
+  // the same space while crossing). Same 0.55s timing feel as before.
   return (
     <span className="relative inline-block overflow-hidden pb-[0.08em] -mb-[0.08em] align-bottom">
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={ROTATING_WORDS[index]}
           className="inline-block text-peri will-change-transform"

@@ -7,11 +7,28 @@ export interface Tool {
   /**
    * simple-icons slug for the tool's official brand mark (rendered from the
    * `simple-icons` package). `null` means simple-icons has no entry for the
-   * tool — the UI falls back to a neutral monogram tile for that one only.
-   * As of simple-icons v16, Adobe's brand icons and Ahrefs were removed
-   * from the set, so those four use the fallback.
+   * tool — see `brandTile` below for those four.
    */
   icon: string | null;
+  /**
+   * Faithful official-style tile for tools simple-icons v16 no longer
+   * carries (Adobe's product icons and Ahrefs were removed from the set).
+   * Drawn in the brand's own published tile colours — dark tile + light
+   * two-letter mark for the Adobe apps, orange lowercase "a" on white
+   * for Ahrefs — at the same 48px tile size as the simple-icons marks.
+   * These are style recreations in the brands' colours, not the official
+   * vector assets.
+   */
+  brandTile?: {
+    /** Tile background (the product's official dark tile colour). */
+    bg: string;
+    /** Letter colour (the product's official light mark colour). */
+    fg: string;
+    /** Letters as on the official icon, e.g. "Ps" / "a". */
+    label: string;
+    /** Tailwind text-size class for the letters. */
+    textClass: string;
+  };
 }
 
 export const tools: Tool[] = [
@@ -116,23 +133,34 @@ export const tools: Tool[] = [
     category: 'Analytics',
     note: 'Backlink and SEO research.',
     icon: null,
+    // Ahrefs anchor orange #FF8800 — verified against Ahrefs' published
+    // brand palette (colorcodeguide.com/official/ahrefs: Orange #FF8800,
+    // Blue #054ADA). Lowercase "a" is the brand's own mark.
+    brandTile: { bg: '#FFFFFF', fg: '#FF8800', label: 'a', textClass: 'text-[22px]' },
   },
   {
     name: 'Adobe Photoshop',
     category: 'Design',
     note: 'Photo and image craft.',
     icon: null,
+    // Official Photoshop tile: "Ps" #31A8FF on #001E36 (Adobe Spectrum
+    // product colours; confirmed via Adobe brand-colour references).
+    brandTile: { bg: '#001E36', fg: '#31A8FF', label: 'Ps', textClass: 'text-[15px]' },
   },
   {
     name: 'Adobe Illustrator',
     category: 'Design',
     note: 'Logos and vector design.',
     icon: null,
+    // Official Illustrator tile: "Ai" #FF9A00 on #330000.
+    brandTile: { bg: '#330000', fg: '#FF9A00', label: 'Ai', textClass: 'text-[15px]' },
   },
   {
     name: 'Adobe Premiere Pro',
     category: 'Design',
     note: 'Video editing and production.',
     icon: null,
+    // Official Premiere Pro tile: "Pr" #EA77FF on #00005B.
+    brandTile: { bg: '#00005B', fg: '#EA77FF', label: 'Pr', textClass: 'text-[15px]' },
   },
 ];

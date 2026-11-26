@@ -27,8 +27,11 @@ import { tools, type Tool } from "@/data/tools";
  * rendered in each brand's official colour on a clean white tile.
  *
  * Four tools have no simple-icons entry (Adobe's brand icons and Ahrefs
- * were removed from the set in v16), so those use a neutral navy monogram
- * tile instead — never a faked official mark.
+ * were removed from the set in v16), so those render a faithful
+ * official-style tile from `tool.brandTile` (see src/data/tools.ts):
+ * the Adobe apps in their published dark-tile / light-letter colours,
+ * Ahrefs as its orange lowercase "a" on white. No neutral monogram
+ * fallback remains — every tool shows a real brand-coloured mark.
  */
 
 const BRAND_ICONS: Record<string, SimpleIcon> = {
@@ -50,25 +53,24 @@ const BRAND_ICONS: Record<string, SimpleIcon> = {
   semrush: siSemrush,
 };
 
-function monogram(name: string): string {
-  const words = name.replace(/[/&]/g, " ").split(/\s+/).filter(Boolean);
-  return words
-    .slice(0, 2)
-    .map((word) => word[0] ?? "")
-    .join("")
-    .toUpperCase();
-}
-
 function BrandMark({ tool }: { tool: Tool }) {
-  const icon = tool.icon ? BRAND_ICONS[tool.icon] : undefined;
-  if (!icon) {
-    // No official mark available — neutral monogram fallback.
+  if (tool.brandTile) {
+    // Official-style tile for tools simple-icons no longer carries:
+    // same 48px tile, same rounding, brand's own tile colours.
+    const tile = tool.brandTile;
     return (
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy font-display text-sm font-bold text-white">
-        {monogram(tool.name)}
+      <span
+        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink/10 font-sans font-extrabold tracking-tight ${tile.textClass}`}
+        style={{ backgroundColor: tile.bg, color: tile.fg }}
+        role="img"
+        aria-label={`${tool.name} logo`}
+      >
+        {tile.label}
       </span>
     );
   }
+  const icon = tool.icon ? BRAND_ICONS[tool.icon] : undefined;
+  if (!icon) return null;
   return (
     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink/10 bg-white">
       <svg
