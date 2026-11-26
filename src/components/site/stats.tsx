@@ -43,10 +43,10 @@ export function Stats() {
   );
 
   return (
-    <section className="bg-navy py-16 text-white sm:py-20">
+    <section className="bg-navy py-20 text-white md:py-28">
       <div ref={root} className="wrap">
         <p className="eyebrow text-skyline">ADD Creatives, in numbers</p>
-        <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-14 lg:grid-cols-4">
           {STATS.map((stat) => (
             <div key={stat.label} className="border-t border-white/20 pt-5">
               <p

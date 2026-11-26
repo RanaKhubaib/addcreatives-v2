@@ -29,7 +29,9 @@ export function Wordmark({
         </svg>
       </span>
       <span className="leading-none">
-        <span className="block font-display text-[1.35rem] font-extrabold tracking-tight ${add}">
+        <span
+          className={`block font-display text-[1.35rem] font-extrabold tracking-tight ${add}`}
+        >
           ADD
         </span>
         <span

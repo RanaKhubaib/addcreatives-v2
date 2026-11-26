@@ -22,7 +22,7 @@ export function Faq({ items }: { items: FaqItem[] }) {
               type="button"
               onClick={() => setOpen(isOpen ? null : index)}
               aria-expanded={isOpen}
-              className="group flex w-full items-center justify-between gap-6 py-6 text-left"
+              className="group flex w-full items-center justify-between gap-6 py-7 text-left"
             >
               <span
                 className={`font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-300 sm:text-2xl ${
@@ -48,7 +48,7 @@ export function Faq({ items }: { items: FaqItem[] }) {
               }`}
             >
               <div className="overflow-hidden">
-                <p className="max-w-2xl pb-7 text-base leading-7 text-steel">
+                <p className="max-w-2xl pb-8 text-base leading-7 text-steel">
                   {item.answer}
                 </p>
               </div>

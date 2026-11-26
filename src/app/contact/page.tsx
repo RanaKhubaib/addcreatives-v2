@@ -31,10 +31,10 @@ export default function ContactPage() {
         description="Tell us what you are working on or what you would like to change. We will help you find a clear next step."
       />
 
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 md:pb-32 lg:pb-40">
         <div className="wrap grid items-start gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
           <Reveal>
-            <div className="rounded-2xl bg-navy p-7 text-white sm:p-9">
+            <div className="rounded-2xl bg-navy p-6 text-white sm:p-8 lg:p-9">
               <p className="eyebrow text-skyline">Get in touch</p>
               <h2 className="mt-4 font-display text-2xl font-semibold leading-tight tracking-tight">
                 A good conversation is a good place to{" "}
@@ -99,7 +99,7 @@ export default function ContactPage() {
 
           <Reveal delay={0.08}>
             <div
-              className="rounded-2xl border border-slate-200 bg-white p-7 shadow-[0_24px_50px_-38px_rgba(17,65,114,0.45)] sm:p-10"
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_50px_-38px_rgba(17,65,114,0.45)] sm:p-8 lg:p-10"
               id="project-enquiry"
             >
               <p className="eyebrow text-royal">Project enquiry</p>

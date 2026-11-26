@@ -64,7 +64,7 @@ export default async function BlogArticlePage({
         imageNote="Illustrative stock image accompanying this article."
       />
 
-      <article className="pb-20 sm:pb-24">
+      <article className="pb-24 md:pb-32">
         <div className="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
           <div className="mx-auto w-full max-w-3xl">
             <div className="flex flex-wrap items-center gap-3 border-b border-slate-300 pb-5 text-xs font-medium text-steel">

@@ -33,7 +33,7 @@ export default async function CaseStudiesPage() {
         imageAlt="A team reviewing campaign materials around a table; illustrative stock photography, not a client project."
         imageNote="Illustrative stock image — not completed client work."
       />
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 md:pb-32 lg:pb-40">
         <div className="wrap">
           {caseStudies.some((study) => study.isSample) ? (
             <div className="mb-12 border-l-2 border-royal bg-ice px-5 py-4 text-sm leading-6 text-navy">

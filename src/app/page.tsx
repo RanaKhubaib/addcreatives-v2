@@ -8,7 +8,7 @@ import { Manifesto } from "@/components/site/manifesto";
 import { ProcessStack } from "@/components/site/process-stack";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHead } from "@/components/site/section-head";
-import { ServiceIndex } from "@/components/site/service-index";
+import { ServiceCards } from "@/components/site/service-cards";
 import { Stats } from "@/components/site/stats";
 import { WorkEditorial } from "@/components/site/work-editorial";
 import { siteConfig } from "@/data/site-config";
@@ -54,7 +54,7 @@ export default async function HomePage() {
     <main>
       <Hero />
 
-      <section className="py-20 sm:py-28" aria-label="Services">
+      <section className="section-pad" aria-label="Services">
         <div className="wrap">
           <SectionHead
             eyebrow="What we do"
@@ -64,12 +64,10 @@ export default async function HomePage() {
                 <span className="serif-accent text-royal">move forward.</span>
               </>
             }
-            description="From a single focused project to a connected digital presence, choose the capabilities that fit your goals. Hover a service to preview it — or tap to open it."
+            description="From a single focused project to a connected digital presence, choose the capabilities that fit your goals."
           />
-          <div className="mt-12">
-            <ServiceIndex services={siteConfig.services} />
-          </div>
-          <Reveal className="mt-8">
+          <ServiceCards services={siteConfig.services} />
+          <Reveal className="mt-12 md:mt-16">
             <Link
               href="/services"
               className="group inline-flex items-center gap-2 text-sm font-bold text-navy transition-colors duration-300 hover:text-royal"
@@ -85,7 +83,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-28" aria-label="Selected work">
+      <section className="section-pad border-t border-slate-200 bg-mist" aria-label="Selected work">
         <div className="wrap">
           <SectionHead
             eyebrow="Selected work"
@@ -97,10 +95,8 @@ export default async function HomePage() {
             }
             description="The concepts below are clearly labelled and show an illustrative approach — not completed client projects or verified results."
           />
-          <div className="mt-14">
-            <WorkEditorial studies={studies} />
-          </div>
-          <Reveal className="mt-14">
+          <WorkEditorial studies={studies} />
+          <Reveal className="mt-12 md:mt-16">
             <Link
               href="/case-studies"
               className="group inline-flex items-center gap-2 text-sm font-bold text-navy transition-colors duration-300 hover:text-royal"
@@ -118,7 +114,7 @@ export default async function HomePage() {
 
       <Manifesto />
 
-      <section className="py-20 sm:py-28" aria-label="How we work">
+      <section className="section-pad" aria-label="How we work">
         <div className="wrap">
           <SectionHead
             eyebrow="How we work"
@@ -130,15 +126,13 @@ export default async function HomePage() {
             }
             description="Good work gets better when the path is clear. We keep the process collaborative, focused, and built around the outcome."
           />
-          <div className="mt-12">
-            <ProcessStack />
-          </div>
+          <ProcessStack />
         </div>
       </section>
 
       <Stats />
 
-      <section className="py-20 sm:py-28" aria-label="From the journal">
+      <section className="section-pad" aria-label="From the journal">
         <div className="wrap">
           <SectionHead
             eyebrow="From the journal"
@@ -150,10 +144,8 @@ export default async function HomePage() {
             }
             description="Practical ideas and perspectives on building brands, improving websites, and making digital marketing work harder."
           />
-          <div className="mt-12">
-            <JournalList posts={posts.slice(0, 3)} />
-          </div>
-          <Reveal className="mt-8">
+          <JournalList posts={posts.slice(0, 3)} />
+          <Reveal className="mt-12 md:mt-16">
             <Link
               href="/blog"
               className="group inline-flex items-center gap-2 text-sm font-bold text-navy transition-colors duration-300 hover:text-royal"
@@ -169,8 +161,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-28" aria-label="Frequently asked questions">
-        <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+      <section className="section-pad border-t border-slate-200 bg-mist" aria-label="Frequently asked questions">
+        <div className="wrap grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <Reveal>
             <p className="eyebrow flex items-center gap-3 text-royal">
               <span aria-hidden="true" className="inline-block h-px w-10 bg-royal" />

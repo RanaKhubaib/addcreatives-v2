@@ -61,7 +61,7 @@ export default async function CaseStudyPage({
         }
       />
 
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 md:pb-32 lg:pb-40">
         <div className="wrap">
           {study.isSample ? (
             <div className="mb-10 border-l-2 border-royal bg-ice px-5 py-4 text-sm leading-6 text-navy">

@@ -64,7 +64,7 @@ export default function AboutPage() {
         imageNote="Illustrative stock image — not a photograph of the ADD Creatives team."
       />
 
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 md:pb-32 lg:pb-40">
         <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <Reveal>
             <p className="eyebrow text-royal">Our approach</p>
@@ -96,7 +96,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-navy py-16 text-white sm:py-20">
+      <section className="bg-navy py-20 text-white md:py-28">
         <div className="wrap grid gap-10 md:grid-cols-2 md:gap-16">
           {[
             {
@@ -125,7 +125,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="section-pad">
         <div className="wrap">
           <SectionHead
             eyebrow="What guides us"
@@ -137,10 +137,10 @@ export default function AboutPage() {
             }
             description="A few simple principles keep our work focused and our partnerships honest, from the first conversation through delivery."
           />
-          <div className="mt-12 border-b border-slate-300">
+          <div className="border-b border-slate-300">
             {VALUES.map(([title, text], index) => (
               <Reveal key={title} delay={index * 0.03}>
-                <div className="group grid gap-2 border-t border-slate-300 py-6 transition-all duration-300 hover:bg-mist sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
+                <div className="group grid gap-2 border-t border-slate-300 py-7 transition-all duration-300 hover:bg-mist sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
                   <span className="font-mono text-sm font-semibold text-royal">
                     0{index + 1}
                   </span>
@@ -155,7 +155,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-28">
+      <section className="section-pad border-t border-slate-200 bg-mist">
         <div className="wrap">
           <SectionHead
             eyebrow="How we think"
@@ -167,10 +167,10 @@ export default function AboutPage() {
             }
             description="The right mix of skills depends on the brief. We bring connected disciplines together when they help move the work forward."
           />
-          <div className="mt-12 border-b border-slate-300">
+          <div className="border-b border-slate-300">
             {DISCIPLINES.map((item) => (
               <Reveal key={item.number}>
-                <div className="group grid gap-2 border-t border-slate-300 bg-mist py-6 transition-colors duration-300 hover:bg-white sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
+                <div className="group grid gap-2 border-t border-slate-300 bg-mist py-7 transition-colors duration-300 hover:bg-white sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">
                   <span className="font-mono text-sm font-semibold text-royal">
                     {item.number}
                   </span>
@@ -185,8 +185,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-28">
-        <div className="wrap grid items-center gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
+      <section className="section-pad">
+        <div className="wrap grid items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
           <Reveal>
             <figure>
               <div className="relative aspect-[1.4] overflow-hidden rounded-xl bg-ice">

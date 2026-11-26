@@ -78,7 +78,7 @@ export default async function ServiceDetailPage({
         imageNote="Illustrative stock image — not ADD Creatives client work."
       />
 
-      <section className="pb-20 sm:pb-24">
+      <section className="pb-24 md:pb-32">
         <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <Reveal>
             <p className="eyebrow text-royal">A clear plan, carefully delivered</p>
@@ -95,7 +95,7 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-24">
+      <section className="border-t border-slate-200 bg-mist py-24 md:py-32">
         <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <Reveal>
             <p className="eyebrow text-royal">Capabilities</p>
@@ -125,7 +125,7 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
-      <section className="py-20 sm:py-24">
+      <section className="py-24 md:py-32">
         <div className="wrap">
           <SectionHead
             eyebrow="What this supports"
@@ -137,7 +137,7 @@ export default async function ServiceDetailPage({
             }
             description="The right scope depends on the brief. These are practical areas the work can support, not guaranteed business outcomes."
           />
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
             {service.benefits.map((benefit, index) => (
               <Reveal key={benefit} delay={index * 0.04}>
                 <div className="border-t border-slate-300 pt-5">
@@ -154,7 +154,7 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
-      <section className="bg-deep py-20 text-white sm:py-24">
+      <section className="bg-deep py-24 text-white md:py-32">
         <div className="wrap">
           <SectionHead
             eyebrow="Our process"
@@ -167,7 +167,7 @@ export default async function ServiceDetailPage({
             }
             description="The details change with every brief, but the way we work stays clear and collaborative."
           />
-          <ol className="mt-12 grid gap-x-8 gap-y-10 md:grid-cols-3">
+          <ol className="grid gap-6 md:grid-cols-3 md:gap-8">
             {service.process.map((step, index) => (
               <li key={step} className="border-t border-white/25 pt-5">
                 <span className="font-mono text-xs font-semibold text-skyline">
@@ -185,8 +185,8 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
-      <section className="py-20 sm:py-24">
-        <div className="wrap grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+      <section className="py-24 md:py-32">
+        <div className="wrap grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
           <Reveal>
             <p className="eyebrow text-royal">Good to know</p>
             <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-4xl">
@@ -200,7 +200,7 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-16 sm:py-20">
+      <section className="border-t border-slate-200 bg-mist py-20 md:py-28">
         <div className="wrap">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
@@ -222,12 +222,12 @@ export default async function ServiceDetailPage({
               />
             </Link>
           </div>
-          <div className="mt-8 border-b border-slate-300">
+          <div className="mt-10 border-b border-slate-300 md:mt-12">
             {relatedServices.map((related, index) => (
               <Link
                 key={related.slug}
                 href={`/services/${related.slug}`}
-                className="group flex items-center justify-between gap-4 border-t border-slate-300 py-5"
+                className="group flex items-center justify-between gap-4 border-t border-slate-300 py-6"
               >
                 <span className="flex items-baseline gap-4">
                   <span className="font-mono text-xs font-semibold text-royal">

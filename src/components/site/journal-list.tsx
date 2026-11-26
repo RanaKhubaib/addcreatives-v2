@@ -21,7 +21,7 @@ export function JournalList({ posts }: { posts: BlogPost[] }) {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group grid gap-4 border-t border-slate-300 py-7 transition-colors duration-300 sm:grid-cols-[7rem_1fr_auto] sm:items-start sm:gap-8 sm:py-9"
+            className="group grid gap-4 border-t border-slate-300 py-8 transition-colors duration-300 hover:bg-mist sm:grid-cols-[7rem_1fr_auto] sm:items-start sm:gap-8 sm:px-4 sm:py-10"
           >
             <div className="flex items-baseline gap-2 sm:block">
               <p className="font-display text-4xl font-bold leading-none tracking-tight text-navy transition-colors duration-300 group-hover:text-royal">

@@ -94,7 +94,7 @@ export default async function BlogPage() {
         </section>
       ) : null}
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-24">
+      <section className="border-t border-slate-200 bg-mist py-24 md:py-32">
         <div className="wrap">
           <Reveal>
             <p className="eyebrow text-royal">The journal</p>

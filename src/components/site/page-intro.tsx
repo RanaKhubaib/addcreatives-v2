@@ -24,11 +24,11 @@ export function PageIntro({
   imageNote?: string;
 }) {
   return (
-    <div className="wrap pb-10 pt-32 sm:pt-36">
+    <div className="wrap pb-12 pt-32 sm:pt-40 md:pb-16">
       {back ? (
         <Link
           href={back.href}
-          className="group mb-8 inline-flex items-center gap-2 text-sm font-semibold text-navy transition-colors duration-300 hover:text-royal"
+          className="group mb-10 inline-flex items-center gap-2 text-sm font-semibold text-navy transition-colors duration-300 hover:text-royal"
         >
           <span aria-hidden="true" className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
           {back.label}
@@ -38,16 +38,16 @@ export function PageIntro({
         <span aria-hidden="true" className="inline-block h-px w-10 bg-royal" />
         {eyebrow}
       </p>
-      <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.5rem,6.5vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.03em] text-ink">
+      <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.5rem,6.5vw,4.5rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink md:mt-8">
         {title}
       </h1>
       {description ? (
-        <p className="mt-6 max-w-2xl text-base leading-7 text-steel sm:text-lg sm:leading-8">
+        <p className="mt-6 max-w-2xl text-base leading-7 text-steel sm:text-lg sm:leading-8 md:mt-8">
           {description}
         </p>
       ) : null}
       {image ? (
-        <figure className="mt-12">
+        <figure className="mt-12 md:mt-16">
           <div className="relative aspect-[21/9] overflow-hidden rounded-xl bg-ice">
             <Image
               src={image}

@@ -6,7 +6,10 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { siteConfig } from "@/data/site-config";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const HEADLINE: { text: string; accent?: boolean }[] = [
   { text: "Digital" },
@@ -16,10 +19,19 @@ const HEADLINE: { text: string; accent?: boolean }[] = [
   { text: "growth.", accent: true },
 ];
 
+const FACTS: [string, string][] = [
+  ["06", "Services"],
+  ["04", "Disciplines"],
+  ["09", "Tools we use"],
+];
+
 /**
- * Full-screen deep navy hero. Giant kinetic headline: words rise out of
- * masks on load (GSAP, transform only). One arched editorial image.
- * No grid background, no glow blobs, no marquee.
+ * Split editorial hero. Left: giant Manrope headline, short support line,
+ * two CTAs and a mono meta row. Right: a layered image composition —
+ * one main photograph, a smaller offset photograph, and a small floating
+ * fact chip — with gentle transform-only parallax on scroll. The bottom
+ * edge carries three honest facts and a scroll cue. No grid background,
+ * no glow blobs, no marquee, no arched mask.
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -52,14 +64,28 @@ export function Hero() {
           },
         );
         gsap.fromTo(
-          ".hero-image",
-          { y: 48, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, delay: 0.35, ease: "power3.out" },
-        );
-        gsap.fromTo(
-          ".hero-photo",
+          ".hero-photo-main",
           { scale: 1.12 },
           { scale: 1, duration: 1.2, delay: 0.35, ease: "power3.out" },
+        );
+        gsap.fromTo(
+          ".hero-visual",
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: "power3.out" },
+        );
+        gsap.fromTo(
+          ".hero-visual",
+          { yPercent: 0 },
+          {
+            yPercent: -5,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
         );
       }, root);
       return () => ctx.revert();
@@ -73,14 +99,15 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden bg-deep text-white"
     >
-      <div className="wrap pb-16 pt-32 sm:pt-36 lg:pb-20 lg:pt-44">
-        <div className="grid items-end gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
-          <div>
+      <div className="wrap pb-20 pt-36 lg:pb-24 lg:pt-44">
+        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-12">
+          {/* Copy — left. */}
+          <div className="lg:col-span-7">
             <p className="hero-fade eyebrow flex flex-wrap items-center gap-3 text-skyline">
               <span className="inline-block h-px w-10 bg-skyline" aria-hidden="true" />
               ADD Creatives · Lahore, Pakistan
             </p>
-            <h1 className="mt-7 font-display text-[clamp(3rem,9vw,6.75rem)] font-bold leading-[0.98] tracking-[-0.03em]">
+            <h1 className="mt-7 font-display text-[clamp(3.25rem,8.5vw,6.5rem)] font-extrabold leading-[0.98] tracking-[-0.03em]">
               {HEADLINE.map((word) => (
                 <span
                   key={word.text}
@@ -119,36 +146,61 @@ export function Hero() {
                 Explore services
               </Link>
             </div>
+            <p className="hero-fade mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-white/50">
+              <span>Lahore, Pakistan</span>
+              <span aria-hidden="true" className="h-1 w-1 rounded-full bg-skyline" />
+              <span>Brand · Digital · Growth</span>
+              <span aria-hidden="true" className="h-1 w-1 rounded-full bg-skyline" />
+              <span>One shared direction</span>
+            </p>
           </div>
 
-          <figure className="hero-image relative mx-auto w-full max-w-sm lg:max-w-none">
-            <div className="arch relative aspect-[3/4] overflow-hidden bg-navy">
+          {/* Layered image composition — right. */}
+          <div className="hero-visual relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-navy">
               <Image
-                src="/images/creative-collaboration.jpg"
-                alt="A group of people collaborating around a laptop; illustrative stock photography, not ADD Creatives staff."
+                src="/images/digital-studio.jpg"
+                alt="A notebook with interface sketches and planning notes, shown as illustrative stock photography."
                 fill
                 priority
                 quality={75}
-                sizes="(max-width: 1024px) 100vw, 30vw"
-                className="hero-photo object-cover"
+                sizes="(max-width: 1024px) 100vw, 38vw"
+                className="hero-photo-main object-cover"
               />
             </div>
-            <figcaption className="mt-3 text-xs leading-5 text-white/50">
-              Illustrative stock image — not a photograph of the ADD Creatives team.
-            </figcaption>
-          </figure>
+            <div className="absolute -bottom-8 -left-4 w-36 overflow-hidden rounded-xl border-4 border-white shadow-[0_24px_40px_-24px_rgba(0,0,0,0.55)] sm:-left-8 sm:w-48">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/images/team-strategy.jpg"
+                  alt="A team planning a project together, shown as illustrative stock photography."
+                  fill
+                  quality={75}
+                  sizes="(max-width: 640px) 9rem, 12rem"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="absolute -right-2 -top-5 rounded-xl bg-white px-4 py-3 text-navy shadow-[0_20px_36px_-20px_rgba(0,0,0,0.5)] sm:-right-4">
+              <p className="font-display text-lg font-extrabold leading-none tracking-tight">
+                06 services
+              </p>
+              <p className="mt-1 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-steel">
+                04 disciplines · 09 tools
+              </p>
+            </div>
+            <p className="mt-12 text-xs leading-5 text-white/50">
+              Illustrative stock images — not photographs of the ADD Creatives team.
+            </p>
+          </div>
         </div>
 
-        <div className="hero-fade mt-14 flex items-end justify-between border-t border-white/10 pt-6">
+        {/* Bottom facts strip. */}
+        <div className="hero-fade mt-16 flex items-end justify-between gap-6 border-t border-white/10 pt-7 lg:mt-20">
           <dl className="flex flex-wrap gap-x-10 gap-y-3">
-            {[
-              ["06", "Services"],
-              ["04", "Disciplines"],
-              ["01", "Shared direction"],
-            ].map(([value, label]) => (
-              <div key={label} className="flex items-baseline gap-2">
+            {FACTS.map(([value, label]) => (
+              <div key={label} className="flex items-baseline gap-2.5">
                 <dt className="sr-only">{label}</dt>
-                <dd className="font-display text-2xl font-bold text-white">{value}</dd>
+                <dd className="font-display text-2xl font-extrabold text-white">{value}</dd>
                 <dd className="text-xs font-medium uppercase tracking-[0.14em] text-white/55">
                   {label}
                 </dd>

@@ -68,10 +68,10 @@ export function Manifesto() {
   );
 
   return (
-    <section className="bg-mist py-20 sm:py-28">
+    <section className="section-pad bg-mist">
       <div ref={root} className="wrap">
         <p className="eyebrow text-royal">Our manifesto</p>
-        <p className="mt-8 max-w-5xl font-display text-[clamp(1.75rem,4.6vw,3.5rem)] font-semibold leading-[1.2] tracking-[-0.02em] text-ink">
+        <p className="mt-10 max-w-5xl font-display text-[clamp(1.75rem,4.6vw,3.5rem)] font-bold leading-[1.2] tracking-[-0.03em] text-ink">
           {STATEMENT.map((word) => (
             <span
               key={word.text + word.accent}
@@ -81,7 +81,7 @@ export function Manifesto() {
             </span>
           ))}
         </p>
-        <p className="mt-8 max-w-xl text-base leading-7 text-steel">
+        <p className="mt-10 max-w-xl text-base leading-7 text-steel sm:text-lg sm:leading-8">
           That is why every engagement begins with the needs behind the brief —
           not a one-size-fits-all playbook.
         </p>

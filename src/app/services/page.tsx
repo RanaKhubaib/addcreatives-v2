@@ -3,7 +3,7 @@ import { CtaBand } from "@/components/site/cta-band";
 import { Reveal } from "@/components/motion/reveal";
 import { PageIntro } from "@/components/site/page-intro";
 import { SectionHead } from "@/components/site/section-head";
-import { ServiceIndex } from "@/components/site/service-index";
+import { ServiceCards } from "@/components/site/service-cards";
 import { siteConfig } from "@/data/site-config";
 
 const CONNECTIONS = [
@@ -50,7 +50,7 @@ export default function ServicesPage() {
         imageNote="Illustrative stock image — not a client website or ADD Creatives project."
       />
 
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 md:pb-32 lg:pb-40">
         <div className="wrap">
           <SectionHead
             eyebrow="What we can do together"
@@ -61,13 +61,11 @@ export default function ServicesPage() {
               </>
             }
           />
-          <div className="mt-12">
-            <ServiceIndex services={siteConfig.services} />
-          </div>
+          <ServiceCards services={siteConfig.services} />
         </div>
       </section>
 
-      <section className="border-t border-slate-200 bg-mist py-20 sm:py-28">
+      <section className="section-pad border-t border-slate-200 bg-mist">
         <div className="wrap">
           <SectionHead
             eyebrow="Connected thinking"
@@ -79,7 +77,7 @@ export default function ServicesPage() {
             }
             description="Services are most useful when they support one another. We keep the plan focused on what your audience and business need."
           />
-          <div className="mt-12 border-b border-slate-300">
+          <div className="border-b border-slate-300">
             {CONNECTIONS.map((item, index) => (
               <Reveal key={item.number} delay={index * 0.04}>
                 <div className="group grid gap-2 border-t border-slate-300 py-7 transition-colors duration-300 hover:bg-white sm:grid-cols-[4rem_1fr_1.5fr] sm:items-baseline sm:gap-6 sm:px-4">

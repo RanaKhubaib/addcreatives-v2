@@ -13,8 +13,8 @@ export function Footer() {
 
   return (
     <footer className="bg-deep text-white">
-      <div className="wrap pt-16 sm:pt-20">
-        <div className="flex flex-col gap-10 pb-12 md:flex-row md:items-end md:justify-between">
+      <div className="wrap pt-20 md:pt-28">
+        <div className="flex flex-col gap-10 pb-14 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="eyebrow text-skyline">Have a project in mind?</p>
             <p className="mt-4 max-w-xl font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
@@ -35,7 +35,7 @@ export function Footer() {
           </Link>
         </div>
 
-        <div className="grid gap-10 border-t border-white/10 py-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 border-t border-white/10 py-14 sm:grid-cols-2 md:gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <Wordmark tone="light" />
             <p className="mt-5 max-w-xs text-sm leading-6 text-white/65">

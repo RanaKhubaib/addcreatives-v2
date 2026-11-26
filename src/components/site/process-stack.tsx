@@ -9,6 +9,7 @@ const STEPS = [
     text: "Understand the business, audience, and goals behind the brief.",
     tone: "bg-white text-ink",
     sub: "text-steel",
+    ghost: "text-navy/10",
   },
   {
     number: "02",
@@ -16,6 +17,7 @@ const STEPS = [
     text: "Set the strategy and creative direction before making the work.",
     tone: "bg-mist text-ink",
     sub: "text-steel",
+    ghost: "text-navy/10",
   },
   {
     number: "03",
@@ -23,6 +25,7 @@ const STEPS = [
     text: "Bring the right creative, technical, and marketing skills together.",
     tone: "bg-navy text-white",
     sub: "text-white/70",
+    ghost: "text-white/10",
   },
   {
     number: "04",
@@ -30,17 +33,24 @@ const STEPS = [
     text: "Launch with care, review what happens, and identify useful next steps.",
     tone: "bg-deep text-white",
     sub: "text-white/70",
+    ghost: "text-white/10",
   },
 ];
 
 export function ProcessStack() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:space-y-8">
       {STEPS.map((step) => (
         <article
           key={step.number}
-          className={`sticky top-24 rounded-2xl border border-slate-200 p-7 shadow-[0_18px_40px_-28px_rgba(17,65,114,0.5)] sm:p-10 ${step.tone}`}
+          className={`sticky top-28 rounded-2xl border border-slate-200 p-7 shadow-[0_18px_40px_-28px_rgba(17,65,114,0.5)] sm:p-10 lg:p-12 ${step.tone}`}
         >
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none absolute right-6 top-5 select-none font-display text-7xl font-extrabold leading-none tracking-tight sm:right-9 sm:top-7 lg:text-8xl ${step.ghost}`}
+          >
+            {step.number}
+          </span>
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="font-mono text-sm font-semibold text-royal">

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, Sora } from "next/font/google";
+import { Instrument_Serif, Inter, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 import { Cursor } from "@/components/site/cursor";
 import { Footer } from "@/components/site/footer";
@@ -7,11 +7,11 @@ import { Nav } from "@/components/site/nav";
 import { siteConfig } from "@/data/site-config";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-sora",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const inter = Inter({
@@ -70,7 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${inter.variable} ${instrumentSerif.variable}`}
+      className={`${manrope.variable} ${inter.variable} ${instrumentSerif.variable}`}
     >
       <body className="min-h-screen bg-white font-sans text-ink antialiased">
         <Cursor />
