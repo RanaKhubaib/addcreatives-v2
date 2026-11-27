@@ -123,12 +123,6 @@ html {
   animation: grain-shift 9s steps(6) infinite;
 }
 
-/* Hide the native cursor while the custom cursor is active. */
-html.has-custom-cursor,
-html.has-custom-cursor * {
-  cursor: none !important;
-}
-
 /* Diagonal-stripe motif in brand blues, low opacity. */
 .stripe-divider {
   height: 1px;

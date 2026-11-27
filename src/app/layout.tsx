@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Manrope } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
-import { CustomCursor } from '@/components/effects/cursor';
 import { GrainOverlay } from '@/components/effects/grain';
 import { RouteTransition } from '@/components/effects/route-transition';
 import { ScrollProgress } from '@/components/effects/scroll-progress';
@@ -69,7 +68,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             >
               Skip to content
             </a>
-            <CustomCursor />
             <GrainOverlay />
             <ScrollProgress />
             <Nav />
