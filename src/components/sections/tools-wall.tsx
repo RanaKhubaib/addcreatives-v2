@@ -86,11 +86,15 @@ function BrandMark({ tool }: { tool: Tool }) {
   );
 }
 
-function ToolCard({ tool }: { tool: Tool }) {
+function ToolCard({ tool, className }: { tool: Tool; className?: string }) {
   return (
     <div
       title={tool.note}
-      className="group relative flex w-44 shrink-0 flex-col items-start gap-3 rounded-[24px] border border-ink/10 bg-white p-4 shadow-[0_1px_2px_rgba(10,15,28,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-royal/30 hover:shadow-[0_12px_32px_rgba(22,62,115,0.12)] sm:w-52"
+      // Width comes from the caller: fixed (w-44 sm:w-52) in the marquee
+      // rows, fluid (w-full) in the grids. A fixed w-44 card inside a
+      // 2-col mobile grid (163px tracks at 390px) overflowed the page
+      // by ~26px, so the grid must never get a fixed-width card.
+      className={`group relative flex w-full min-w-0 flex-col items-start gap-3 rounded-[24px] border border-ink/10 bg-white p-4 shadow-[0_1px_2px_rgba(10,15,28,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-royal/30 hover:shadow-[0_12px_32px_rgba(22,62,115,0.12)] ${className ?? ""}`}
     >
       <BrandMark tool={tool} />
       <div>
@@ -119,7 +123,7 @@ function MarqueeRow({ items, reverse = false }: { items: Tool[]; reverse?: boole
         className={`tools-marquee-track flex w-max gap-4 py-2 pr-4 ${reverse ? "tools-marquee-reverse" : ""}`}
       >
         {track.map((tool, i) => (
-          <ToolCard key={`${tool.name}-${i}`} tool={tool} />
+          <ToolCard key={`${tool.name}-${i}`} tool={tool} className="w-44 shrink-0 sm:w-52" />
         ))}
       </div>
     </div>

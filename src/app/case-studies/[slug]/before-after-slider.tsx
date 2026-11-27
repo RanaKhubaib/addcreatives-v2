@@ -24,7 +24,9 @@ export default function BeforeAfterSlider({
 
   return (
     <div>
-      <div className="relative aspect-[16/10] w-full touch-none overflow-hidden rounded-3xl select-none">
+      {/* touch-pan-y (not touch-none): the image never traps vertical
+          page scroll on a phone — the range input below is the control. */}
+      <div className="relative aspect-[16/10] w-full touch-pan-y overflow-hidden rounded-3xl select-none">
         <Image
           src={afterSrc}
           alt="After — concept preview"

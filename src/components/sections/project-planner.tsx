@@ -71,7 +71,7 @@ function Chip({
       type="button"
       onClick={onToggle}
       aria-pressed={selected}
-      className={`flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${
+      className={`flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold transition-all duration-200 ${
         selected
           ? "border-navy bg-navy text-white shadow-[0_8px_20px_rgba(22,62,115,0.25)]"
           : "border-ink/15 bg-white text-ink hover:border-royal/50 hover:text-royal"

@@ -121,7 +121,7 @@ function ServiceCard({ service, large }: { service: Service; large: boolean }) {
           <div className="relative mt-auto flex items-center justify-between pt-6">
             <Link
               href={`/services/${service.slug}`}
-              className="inline-flex items-center gap-1.5 text-sm font-bold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
+              className="inline-flex items-center gap-1.5 py-2 text-sm font-bold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal"
               aria-label={`Learn more about ${service.title}`}
             >
               Learn more
@@ -177,7 +177,7 @@ export default function ServicesBento() {
               role="tab"
               aria-selected={filter === label}
               onClick={() => setFilter(label)}
-              className={`rounded-full px-5 py-2.5 text-sm font-bold transition-colors ${
+              className={`rounded-full px-5 py-3 text-sm font-bold transition-colors ${
                 filter === label
                   ? 'bg-navy text-white shadow-md'
                   : 'border border-ink/15 bg-white text-ink/70 hover:border-navy hover:text-navy'

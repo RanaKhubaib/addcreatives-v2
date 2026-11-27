@@ -231,7 +231,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/75 transition-colors hover:text-white"
+                    className="inline-block py-1 text-sm text-white/75 transition-colors hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -250,7 +250,7 @@ export function Footer() {
                 <li key={service.slug}>
                   <Link
                     href={`/services/${service.slug}`}
-                    className="text-sm text-white/75 transition-colors hover:text-white"
+                    className="inline-block py-1 text-sm text-white/75 transition-colors hover:text-white"
                   >
                     {service.title}
                   </Link>
@@ -323,7 +323,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${label} (opens in a new tab)`}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-royal hover:bg-royal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peri"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-royal hover:bg-royal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peri"
               >
                 <Icon />
               </a>
@@ -333,7 +333,7 @@ export function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label="Open our address in Google Maps"
-              className="flex h-10 items-center gap-1.5 rounded-full border border-white/15 px-3 text-xs font-semibold text-white/70 transition-colors hover:border-royal hover:bg-royal hover:text-white"
+              className="flex h-11 items-center gap-1.5 rounded-full border border-white/15 px-3 text-xs font-semibold text-white/70 transition-colors hover:border-royal hover:bg-royal hover:text-white"
             >
               <MapPin className="h-4 w-4" />
               Map
@@ -343,7 +343,7 @@ export function Footer() {
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               aria-label="Back to top"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-royal text-white transition-colors hover:bg-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peri"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-royal text-white transition-colors hover:bg-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-peri"
             >
               <ArrowUp className="h-[18px] w-[18px]" />
             </button>

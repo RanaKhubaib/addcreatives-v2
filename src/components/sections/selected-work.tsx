@@ -95,10 +95,12 @@ export default function SelectedWork() {
 
   useEffect(() => {
     // GSAP is loaded lazily, only on desktop and only when motion is
-    // allowed — it is not part of the initial bundle. On mobile and with
-    // prefers-reduced-motion the cards render as a plain vertical stack.
+    // allowed — it is not part of the initial bundle. Below lg (tablets
+    // and phones) the cards render as a plain vertical stack: a pinned
+    // horizontal track on a touch device can trap scroll, so the pin is
+    // desktop-only (min-width: 1024px).
     if (reduceMotion) return;
-    if (!window.matchMedia('(min-width: 768px)').matches) return;
+    if (!window.matchMedia('(min-width: 1024px)').matches) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;
@@ -138,7 +140,7 @@ export default function SelectedWork() {
 
       const mm = gsap.matchMedia();
 
-      mm.add('(min-width: 768px)', () => {
+      mm.add('(min-width: 1024px)', () => {
         const section = sectionRef.current;
         const track = trackRef.current;
         if (!section || !track) return;
@@ -217,9 +219,9 @@ export default function SelectedWork() {
         </div>
       </div>
 
-      {/* Mobile + reduced-motion: vertical stack. */}
+      {/* Tablet + mobile + reduced-motion: vertical stack (2-col from sm up). */}
       <div
-        className={`mt-12 grid gap-5 px-6 sm:px-8 ${reduceMotion ? '' : 'md:hidden'}`}
+        className={`mt-12 grid gap-5 px-6 sm:grid-cols-2 sm:px-8 ${reduceMotion ? '' : 'lg:hidden'}`}
       >
         {caseStudies.map((study) => (
           <WorkCard key={study.slug} study={study} widthClass="w-full" />
@@ -228,7 +230,7 @@ export default function SelectedWork() {
 
       {/* Desktop: pinned horizontal scroll gallery (motion allowed only). */}
       {!reduceMotion ? (
-        <div ref={sectionRef} className="relative hidden md:block">
+        <div ref={sectionRef} className="relative hidden lg:block">
         <div className="flex min-h-svh items-center overflow-hidden">
           <div ref={trackRef} className="flex gap-6 px-6 will-change-transform sm:px-8">
             {caseStudies.map((study) => (

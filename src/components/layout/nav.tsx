@@ -129,7 +129,7 @@ export function Nav() {
                 aria-controls="services-mega-menu"
                 onClick={() => setMegaOpen((open) => !open)}
                 className={cn(
-                  'flex cursor-pointer items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
+                  'flex cursor-pointer items-center gap-1 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
                   // Links are always dark navy on the white header — no
                   // `dark:` variant here: a dark-mode OS must never be
                   // able to flip them white-on-white (see globals.css).
@@ -151,7 +151,7 @@ export function Nav() {
                   href={link.href}
                   aria-current={pathname === link.href ? 'page' : undefined}
                   className={cn(
-                    'rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
+                    'rounded-full px-4 py-2.5 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
                     // Always dark navy on the white header — never white.
                     pathname === link.href ? 'text-royal' : 'text-ink/80',
                   )}
@@ -163,16 +163,25 @@ export function Nav() {
           </ul>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Button href="/contact" size="md" className="hidden sm:inline-flex">
-              Start a project
-              <ArrowUpRight className="h-4 w-4" />
-            </Button>
+            {/* The hide-below-sm lives on this wrapper, NOT on the Button:
+                Button's own base classes include `inline-flex`, and `cn()`
+                is a plain join (no tailwind-merge), so `hidden` + `inline-flex`
+                on the same element loses to `inline-flex` in Tailwind v4's
+                cascade — the CTA showed at 390px, the header row's
+                min-content hit 439px, and the whole document got a sideways
+                scroll on every page. Wrapping it hides it for real. */}
+            <div className="hidden sm:block">
+              <Button href="/contact" size="md">
+                Start a project
+                <ArrowUpRight className="h-4 w-4" />
+              </Button>
+            </div>
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
               aria-expanded={mobileOpen}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal lg:hidden"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
@@ -246,7 +255,7 @@ export function Nav() {
                 type="button"
                 onClick={() => setMobileOpen(false)}
                 aria-label="Close menu"
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <X className="h-5 w-5" />
               </button>

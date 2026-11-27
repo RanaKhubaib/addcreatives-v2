@@ -161,7 +161,7 @@ export default function BlogFilter({
               role="tab"
               aria-selected={active}
               onClick={() => setCategory(item)}
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
+              className={`rounded-full px-5 py-3 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
                 active
                   ? 'bg-navy text-white'
                   : 'bg-mist text-ink hover:bg-peri/20 dark:bg-white/10 dark:text-white'

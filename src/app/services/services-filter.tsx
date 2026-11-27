@@ -31,7 +31,7 @@ export default function ServicesFilter({ services }: { services: Service[] }) {
               role="tab"
               aria-selected={active}
               onClick={() => setFilter(item)}
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
+              className={`rounded-full px-5 py-3 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal ${
                 active
                   ? 'bg-navy text-white'
                   : 'bg-mist text-ink hover:bg-peri/20 dark:bg-white/10 dark:text-white'
@@ -77,7 +77,7 @@ export default function ServicesFilter({ services }: { services: Service[] }) {
               </ul>
               <Link
                 href={`/services/${service.slug}`}
-                className="mt-7 inline-flex items-center gap-1.5 text-sm font-bold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal dark:text-peri"
+                className="mt-7 inline-flex items-center gap-1.5 py-2 text-sm font-bold text-navy underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-royal dark:text-peri"
               >
                 Learn more
                 <ArrowUpRight
