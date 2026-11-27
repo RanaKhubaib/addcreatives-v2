@@ -7,7 +7,7 @@ import { GrainOverlay } from '@/components/effects/grain';
 import { RouteTransition } from '@/components/effects/route-transition';
 import { ScrollProgress } from '@/components/effects/scroll-progress';
 import { AmbientSoundToggle } from '@/components/effects/sound-toggle';
-import { CommandPalette } from '@/components/layout/command-palette';
+import { CommandPaletteLazy } from '@/components/layout/command-palette-lazy';
 import { CookieBanner } from '@/components/layout/cookie-banner';
 import { Footer } from '@/components/layout/footer';
 import { Nav } from '@/components/layout/nav';
@@ -57,8 +57,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
     >
       <body className="min-h-full bg-white font-sans text-ink dark:bg-ink dark:text-white">
-        {/* Site is light-only: forcedTheme="light" means the theme never
-            switches to dark, so `dark:` classes in the codebase never apply. */}
+        {/* Site is light-only: forcedTheme="light" never adds the `.dark`
+            class, and globals.css redefines the `dark:` variant as
+            class-based (Tailwind v4's default is `prefers-color-scheme`,
+            which would have applied on dark-mode devices regardless).
+            Together, no `dark:` rule can ever fire anywhere. */}
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <a
               href="#main-content"
@@ -70,7 +73,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <GrainOverlay />
             <ScrollProgress />
             <Nav />
-            <CommandPalette />
+            {/* Palette loads on first Cmd/Ctrl+K — cmdk is not in first-load JS. */}
+            <CommandPaletteLazy />
             {/* Preloader mount point — the preloader component itself comes
                 from another agent and mounts into this element. */}
             <div id="preloader-root" />

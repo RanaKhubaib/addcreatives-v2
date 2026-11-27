@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Dark variant is CLASS-based, not OS-based: Tailwind v4's default
+   `dark:` variant follows `prefers-color-scheme`, so on a dark-mode OS
+   every `dark:text-white` / `dark:bg-ink` in the codebase applied even
+   though the site is light-only (next-themes forcedTheme="light" only
+   controls the `.dark` class on <html>). That is what turned the white
+   header's nav links white-on-white. With this line, `dark:` only
+   applies under a `.dark` ancestor — which forcedTheme="light" never
+   adds — so no dark rule can ever fire anywhere on the site. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-navy: #163e73;
   --color-royal: #0b4da2;

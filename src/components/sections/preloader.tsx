@@ -4,12 +4,18 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 const FLAG = 'ac-preloader-seen';
-const MAX_MS = 1200;
+const MAX_MS = 900;
+const COUNT_MS = 400;
 
 /**
  * Full-screen navy intro overlay. Counts 0 → 100, then slides up like a
  * curtain. Skippable (click / Escape), shows once per session, and never
- * blocks content: it dismisses itself after 1.2s at the latest.
+ * blocks content: dismissal is purely timer-based — it never waits for
+ * window load, fonts, images or the WebGL chunk — and it dismisses
+ * itself after 900ms at the latest (count 400ms + 50ms hold + 350ms
+ * exit). Note the overlay only mounts after hydration, so slow JS
+ * download still delays its first paint; the count itself is never the
+ * bottleneck.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true);
@@ -45,20 +51,20 @@ export default function Preloader() {
     }
 
     if (reduceMotion) {
-      const t = window.setTimeout(dismiss, 300);
+      const t = window.setTimeout(dismiss, 150);
       return () => window.clearTimeout(t);
     }
 
     const startedAt = performance.now();
     let raf = 0;
     const tick = (now: number) => {
-      const p = Math.min(1, (now - startedAt) / 600);
+      const p = Math.min(1, (now - startedAt) / COUNT_MS);
       const eased = 1 - Math.pow(1 - p, 3);
       setCount(Math.round(eased * 100));
       if (p < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        window.setTimeout(dismiss, 100);
+        window.setTimeout(dismiss, 50);
       }
     };
     raf = requestAnimationFrame(tick);
@@ -98,7 +104,7 @@ export default function Preloader() {
           className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center overflow-hidden bg-navy text-white"
           initial={{ y: 0 }}
           exit={{ y: '-100%' }}
-          transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
         >
           {/* Diagonal-stripe motif sweeping across the overlay. */}
           <div

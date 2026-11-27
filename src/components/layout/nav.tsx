@@ -130,7 +130,10 @@ export function Nav() {
                 onClick={() => setMegaOpen((open) => !open)}
                 className={cn(
                   'flex cursor-pointer items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
-                  megaOpen ? 'text-royal' : 'text-ink/80 dark:text-white/80',
+                  // Links are always dark navy on the white header — no
+                  // `dark:` variant here: a dark-mode OS must never be
+                  // able to flip them white-on-white (see globals.css).
+                  megaOpen ? 'text-royal' : 'text-ink/80',
                 )}
               >
                 Services
@@ -149,9 +152,8 @@ export function Nav() {
                   aria-current={pathname === link.href ? 'page' : undefined}
                   className={cn(
                     'rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal',
-                    pathname === link.href
-                      ? 'text-royal'
-                      : 'text-ink/80 dark:text-white/80',
+                    // Always dark navy on the white header — never white.
+                    pathname === link.href ? 'text-royal' : 'text-ink/80',
                   )}
                 >
                   {link.label}
@@ -189,7 +191,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="absolute inset-x-0 top-full hidden border-b border-ink/10 bg-white shadow-[0_30px_60px_-30px_rgb(10_15_28/0.25)] lg:block dark:border-white/10 dark:bg-ink"
+              className="absolute inset-x-0 top-full hidden border-b border-ink/10 bg-white shadow-[0_30px_60px_-30px_rgb(10_15_28/0.25)] lg:block"
               onMouseEnter={openMega}
               onMouseLeave={scheduleClose}
             >
@@ -198,16 +200,16 @@ export function Nav() {
                   <Link
                     key={service.slug}
                     href={`/services/${service.slug}`}
-                    className="group rounded-2xl p-4 transition-colors hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal dark:hover:bg-white/5"
+                    className="group rounded-2xl p-4 transition-colors hover:bg-mist focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal"
                   >
-                    <span className="text-xs font-bold tracking-widest text-royal dark:text-peri">
+                    <span className="text-xs font-bold tracking-widest text-royal">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="mt-1 flex items-center gap-2 font-display text-lg font-bold text-ink group-hover:text-royal dark:text-white">
+                    <span className="mt-1 flex items-center gap-2 font-display text-lg font-bold text-ink group-hover:text-royal">
                       {service.title}
                       <ArrowUpRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-ink/60 dark:text-white/60">
+                    <span className="mt-1 block text-sm leading-relaxed text-ink/60">
                       {service.short}
                     </span>
                   </Link>
