@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { tools } from '@/data/tools';
@@ -80,7 +81,20 @@ const PROCESS = [
   },
 ];
 
-// TODO: Replace with real team members once bios and photos are confirmed.
+const WHAT_WE_DONT_DO = [
+  {
+    title: 'No fake reviews',
+    text: 'We never invent testimonials or ratings. If a review is shown, it is from a real customer.',
+  },
+  {
+    title: 'No copied designs',
+    text: 'Every site and brand is built for the business it belongs to — not lifted from someone else.',
+  },
+  {
+    title: 'No hidden fees',
+    text: 'The price we agree is the price you pay. If the scope changes, we say so before we bill it.',
+  },
+];
 // These placeholder cards are intentionally marked "coming soon" in the UI.
 const TEAM_PLACEHOLDERS = [
   { initials: 'AK', role: 'Founder & Developer' },
@@ -111,6 +125,62 @@ export default function AboutPage() {
             websites that did not reflect their quality, and marketing that was hard
             to understand or measure. So we built an agency that keeps things clear —
             one team, plain language, and work you can see working.
+          </p>
+        </div>
+      </section>
+
+      {/* Our story — with a studio image */}
+      <section aria-labelledby="story-heading" className="px-6 py-12 sm:py-16">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl">
+            <Image
+              src="/images/digital-studio.jpg"
+              alt="The ADD Creatives studio at work"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              quality={75}
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <h2 id="story-heading" className="font-display text-2xl font-bold sm:text-3xl">
+              Our story
+            </h2>
+            <p className="mt-4 text-ink/80 dark:text-white/80">
+              ADD Creatives started with a simple observation: good businesses in
+              Lahore and beyond had websites that did not reflect the quality of
+              their work. The sites were slow, hard to update, or built from a
+              template that looked like everyone else&rsquo;s — and the marketing
+              around them was hard to understand or measure.
+            </p>
+            <p className="mt-4 text-ink/80 dark:text-white/80">
+              So we built the agency we wanted to hire: one small team that designs,
+              builds, and grows a business&rsquo;s online presence in plain language,
+              with a fixed price agreed up front and work you can see working. No
+              layers of account managers, no mystery — just the people doing the
+              work, talking directly to the people it is for.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Lahore — local roots, real address from site config */}
+      <section
+        aria-labelledby="lahore-heading"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 id="lahore-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            Why Lahore
+          </h2>
+          <p className="mt-4 max-w-3xl text-ink/80 dark:text-white/80">
+            We are based in Lahore, Pakistan — a city full of businesses that
+            deserve better websites than they usually get. Being here keeps us
+            close to the local businesses we serve, and working in Pakistan time
+            ({siteConfig.hours}) keeps us a short call away for clients abroad too.
+          </p>
+          <p className="mt-4 max-w-3xl text-ink/70 dark:text-white/70">
+            You can find us at {siteConfig.address}.
           </p>
         </div>
       </section>
@@ -200,6 +270,32 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* What we don't do — an honest note */}
+      <section
+        aria-labelledby="dont-do-heading"
+        className="bg-mist px-6 py-12 sm:py-16 dark:bg-white/5"
+      >
+        <div className="mx-auto max-w-6xl">
+          <h2 id="dont-do-heading" className="font-display text-2xl font-bold sm:text-3xl">
+            What we don&rsquo;t do
+          </h2>
+          <p className="mt-2 max-w-2xl text-ink/70 dark:text-white/70">
+            Saying no to the easy shortcuts is part of the job.
+          </p>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+            {WHAT_WE_DONT_DO.map((item) => (
+              <li
+                key={item.title}
+                className="rounded-3xl border border-ink/10 bg-white p-6 dark:border-white/10 dark:bg-white/5"
+              >
+                <h3 className="font-display text-xl font-bold">{item.title}</h3>
+                <p className="mt-2 text-ink/70 dark:text-white/70">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Tools strip */}
       <section aria-labelledby="tools-heading" className="px-6 pb-12 sm:pb-16">
         <div className="mx-auto max-w-6xl">
@@ -259,17 +355,27 @@ export default function AboutPage() {
       <section className="px-6 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl rounded-3xl bg-navy px-6 py-12 text-center text-white sm:px-12">
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
-            Want to work with us?
+            Let&rsquo;s build something that works
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-white/80">
-            Tell us about your business — we reply within one working day.
+            Whether it is a first website, a rebrand, or a store that needs to sell
+            better — tell us about your business. We reply within one working day
+            with honest next steps and a fixed price, before you commit to anything.
           </p>
-          <Link
-            href="/contact"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Get in touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Get in touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Browse our services <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </section>
     </main>

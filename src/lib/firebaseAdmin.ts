@@ -1,7 +1,12 @@
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 
-export { COLLECTIONS } from './firebase';
+/** Firestore collection names used across the site. */
+export const COLLECTIONS = {
+  contactSubmissions: 'contact_submissions',
+  newsletterSubscribers: 'newsletter_subscribers',
+  auditRequests: 'audit_requests',
+} as const;
 
 /** True only when the Admin SDK service-account keys are present. Never crashes without keys. */
 export const adminReady = Boolean(

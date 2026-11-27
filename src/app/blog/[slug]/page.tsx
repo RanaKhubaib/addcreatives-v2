@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -106,6 +107,29 @@ const mdxComponents = {
   ),
 };
 
+/**
+ * One in-body image per post, chosen by category from the existing JPGs in
+ * public/images/. Kept different from the post's hero image so the page
+ * never shows the same photo twice.
+ */
+const IN_BODY_IMAGE_BY_CATEGORY: Record<string, string> = {
+  'Web Design': '/images/creative-collaboration.jpg',
+  Branding: '/images/brand-creative.jpg',
+  'E-Commerce': '/images/digital-studio.jpg',
+  Design: '/images/creative-collaboration.jpg',
+  Marketing: '/images/film-production.jpg',
+  SEO: '/images/campaign-workshop.jpg',
+};
+
+function pickInBodyImage(category: string, heroImage: string): string {
+  const mapped = IN_BODY_IMAGE_BY_CATEGORY[category] ?? '/images/creative-collaboration.jpg';
+  if (mapped !== heroImage) return mapped;
+  if ('/images/creative-collaboration.jpg' !== heroImage) {
+    return '/images/creative-collaboration.jpg';
+  }
+  return '/images/digital-studio.jpg';
+}
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -147,11 +171,25 @@ export default async function BlogPostPage({
   }
 
   const headings = extractHeadings(post.content);
-  const minutes = estimateReadingMinutes(post.content);
+  const minutes = post.readTime > 0 ? post.readTime : estimateReadingMinutes(post.content);
   const url = `https://${siteConfig.website}/blog/${post.slug}`;
-  const related = getAllPosts()
-    .filter((item) => item.slug !== post.slug && item.category === post.category && !item.comingSoon)
-    .slice(0, 2);
+  // Related posts: same category first, then other recent posts, so the row
+  // always shows 2 — some categories have only one post.
+  const allPosts = getAllPosts();
+  const sameCategory = allPosts.filter(
+    (item) => item.slug !== post.slug && item.category === post.category && !item.comingSoon,
+  );
+  const otherPosts = allPosts.filter(
+    (item) => item.slug !== post.slug && item.category !== post.category && !item.comingSoon,
+  );
+  const related = [...sameCategory, ...otherPosts].slice(0, 2);
+
+  // Split the MDX at the first `## ` heading so an image can sit between the
+  // intro and the first section.
+  const firstH2 = post.content.search(/^##\s/m);
+  const introPart = firstH2 > 0 ? post.content.slice(0, firstH2) : post.content;
+  const restPart = firstH2 > 0 ? post.content.slice(firstH2) : '';
+  const inBodyImage = pickInBodyImage(post.category, post.image);
 
   return (
     <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">
@@ -173,6 +211,38 @@ export default async function BlogPostPage({
           </h1>
           {post.excerpt && (
             <p className="mt-4 text-lg text-ink/70 dark:text-white/70">{post.excerpt}</p>
+          )}
+
+          {/* Hero image from the post's frontmatter. */}
+          {post.image && (
+            <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+              <Image
+                src={post.image}
+                alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 66vw"
+                quality={75}
+                priority
+                className="object-cover"
+              />
+            </div>
+          )}
+
+          {/* Key takeaways — the post's own h2 headings, listed plainly. */}
+          {headings.length > 0 && (
+            <section
+              aria-labelledby="takeaways-heading"
+              className="mt-8 rounded-3xl border border-royal/20 bg-mist p-6 dark:bg-white/5"
+            >
+              <h2 id="takeaways-heading" className="font-display text-lg font-bold">
+                Key takeaways
+              </h2>
+              <ul className="mt-3 list-disc space-y-2 pl-6 text-ink/80 dark:text-white/80">
+                {headings.map((heading) => (
+                  <li key={heading.id}>{heading.text}</li>
+                ))}
+              </ul>
+            </section>
           )}
 
           {headings.length > 0 && (
@@ -199,7 +269,33 @@ export default async function BlogPostPage({
           )}
 
           <div className="mt-8">
-            <MDXRemote source={post.content} components={mdxComponents} />
+            <MDXRemote source={introPart} components={mdxComponents} />
+            {restPart ? (
+              <>
+                <figure className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+                  <Image
+                    src={inBodyImage}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 66vw"
+                    quality={75}
+                    className="object-cover"
+                  />
+                </figure>
+                <MDXRemote source={restPart} components={mdxComponents} />
+              </>
+            ) : (
+              <figure className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl">
+                <Image
+                  src={inBodyImage}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 66vw"
+                  quality={75}
+                  className="object-cover"
+                />
+              </figure>
+            )}
           </div>
 
           <hr className="my-10 border-ink/10 dark:border-white/10" />
@@ -251,6 +347,26 @@ export default async function BlogPostPage({
               </ul>
             </section>
           )}
+
+          {/* CTA band */}
+          <section
+            aria-labelledby="post-cta-heading"
+            className="mt-12 rounded-3xl bg-navy px-6 py-10 text-center text-white sm:px-12"
+          >
+            <h2 id="post-cta-heading" className="font-display text-2xl font-bold sm:text-3xl">
+              Want help with your own project?
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-white/80">
+              If this post gave you an idea for your website, brand, or campaign,
+              tell us about it — we reply within one working day.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-navy transition hover:bg-mist focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Start a project <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </section>
         </div>
       </article>
     </main>

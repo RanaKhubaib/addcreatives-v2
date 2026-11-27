@@ -15,8 +15,10 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getAllPosts();
-  const featured = posts[0];
-  const rest = posts.slice(1);
+  // Featured hero uses the post flagged featured:true in its frontmatter,
+  // falling back to the newest post when none is flagged.
+  const featured = posts.find((post) => post.featured) ?? posts[0];
+  const rest = posts.filter((post) => post.slug !== featured?.slug);
 
   return (
     <main id="main-content" className="bg-white text-ink dark:bg-ink dark:text-white">

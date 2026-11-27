@@ -1,6 +1,13 @@
 "use client";
 
-import { Component, type ReactNode, useEffect, useMemo, useRef } from 'react';
+import {
+  Component,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -66,21 +73,37 @@ const FRAG = /* glsl */ `
   }
 `;
 
-function GradientPlane() {
+/**
+ * Gradient plane. When `glowEnabled` is false (small screens /
+ * prefers-reduced-motion) the pointer listener and the per-frame mouse
+ * lerp are skipped entirely and the mouse uniform is parked far offscreen
+ * so the glow term contributes nothing.
+ */
+function GradientPlane({ glowEnabled }: { glowEnabled: boolean }) {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const mouse = useRef(new THREE.Vector2(0.5, 0.5));
-  const targetMouse = useRef(new THREE.Vector2(0.5, 0.5));
+  const mouse = useRef(new THREE.Vector2(-10, -10));
+  const targetMouse = useRef(new THREE.Vector2(-10, -10));
 
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+      uMouse: { value: new THREE.Vector2(-10, -10) },
       uRes: { value: new THREE.Vector2(1, 1) },
     }),
     [],
   );
 
   useEffect(() => {
+    if (!glowEnabled) {
+      // Park the glow offscreen; no pointer tracking at all.
+      uniforms.uMouse.value.set(-10, -10);
+      mouse.current.set(-10, -10);
+      targetMouse.current.set(-10, -10);
+      return;
+    }
+    targetMouse.current.set(0.5, 0.5);
+    mouse.current.set(0.5, 0.5);
+    uniforms.uMouse.value.set(0.5, 0.5);
     const onMove = (e: PointerEvent) => {
       targetMouse.current.set(
         e.clientX / window.innerWidth,
@@ -89,7 +112,7 @@ function GradientPlane() {
     };
     window.addEventListener('pointermove', onMove, { passive: true });
     return () => window.removeEventListener('pointermove', onMove);
-  }, []);
+  }, [glowEnabled, uniforms]);
 
   useEffect(() => {
     const onResize = () => {
@@ -104,6 +127,7 @@ function GradientPlane() {
     const mat = materialRef.current;
     if (!mat) return;
     mat.uniforms.uTime.value += Math.min(delta, 0.05);
+    if (!glowEnabled) return;
     mouse.current.lerp(targetMouse.current, 0.06);
     mat.uniforms.uMouse.value.copy(mouse.current);
   });
@@ -160,28 +184,89 @@ function WebGLFallback() {
 }
 
 export default function WebGLHero() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  // Mount the Canvas only after first paint: idle time, or 600ms at the
+  // latest, so WebGL/Three.js never competes with LCP.
+  const [ready, setReady] = useState(false);
+  // Pause the render loop while the hero is offscreen.
+  const [visible, setVisible] = useState(true);
+  // No mouse glow on small screens or with reduced motion.
+  const [glowEnabled, setGlowEnabled] = useState(true);
+
+  useEffect(() => {
+    // requestIdleCallback is typed as always present on Window, so test
+    // it through a widened alias — a plain `'x' in window` check narrows
+    // `window` to never in the else branch.
+    const w = window as Window & {
+      requestIdleCallback?: (
+        cb: () => void,
+        opts?: { timeout: number },
+      ) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    let idleId: number | undefined;
+    let timer: number | undefined;
+    const mount = () => setReady(true);
+    if (typeof w.requestIdleCallback === 'function') {
+      idleId = w.requestIdleCallback(mount, { timeout: 600 });
+    } else {
+      timer = window.setTimeout(mount, 600);
+    }
+    return () => {
+      if (idleId !== undefined) w.cancelIdleCallback?.(idleId);
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mqlSmall = window.matchMedia('(max-width: 767px)');
+    const mqlMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setGlowEnabled(!mqlSmall.matches && !mqlMotion.matches);
+    update();
+    mqlSmall.addEventListener('change', update);
+    mqlMotion.addEventListener('change', update);
+    return () => {
+      mqlSmall.removeEventListener('change', update);
+      mqlMotion.removeEventListener('change', update);
+    };
+  }, []);
+
   if (typeof window !== 'undefined' && !window.WebGLRenderingContext) {
     return <WebGLFallback />;
   }
 
   return (
-    <div className="absolute inset-0">
+    <div ref={wrapperRef} className="pointer-events-none absolute inset-0">
       <WebGLFallback />
-      <WebGLErrorBoundary fallback={null}>
-        <Canvas
-          dpr={[1, 1.75]}
-          gl={{ antialias: false, powerPreference: 'high-performance' }}
-          camera={{ position: [0, 0, 1], fov: 45 }}
-          className="!absolute !inset-0"
-          onCreated={({ gl }) => {
-            const canvas = gl.domElement;
-            canvas.style.position = 'absolute';
-            canvas.style.inset = '0';
-          }}
-        >
-          <GradientPlane />
-        </Canvas>
-      </WebGLErrorBoundary>
+      {ready ? (
+        <WebGLErrorBoundary fallback={null}>
+          <Canvas
+            dpr={[1, 1.5]}
+            frameloop={visible ? 'always' : 'never'}
+            gl={{ antialias: false, powerPreference: 'high-performance' }}
+            camera={{ position: [0, 0, 1], fov: 45 }}
+            className="!absolute !inset-0"
+            onCreated={({ gl }) => {
+              const canvas = gl.domElement;
+              canvas.style.position = 'absolute';
+              canvas.style.inset = '0';
+            }}
+          >
+            <GradientPlane glowEnabled={glowEnabled} />
+          </Canvas>
+        </WebGLErrorBoundary>
+      ) : null}
     </div>
   );
 }

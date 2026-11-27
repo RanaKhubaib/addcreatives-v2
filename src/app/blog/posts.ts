@@ -10,6 +10,12 @@ export interface BlogPostMeta {
   date: string;
   /** True when no MDX file exists yet — the post is a planned title only. */
   comingSoon: boolean;
+  /** Hero image from frontmatter (`image`); '' when the post has none. */
+  image: string;
+  /** Minutes to read, from frontmatter (`readTime`) or the estimate. 0 means unknown. */
+  readTime: number;
+  /** True for the post flagged `featured: true` in frontmatter. */
+  featured: boolean;
 }
 
 export interface BlogPost extends BlogPostMeta {
@@ -31,6 +37,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'Web Design',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
   {
     slug: 'how-to-choose-the-right-digital-marketing-mix',
@@ -39,6 +48,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'Marketing',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
   {
     slug: 'brand-consistency-without-being-boring',
@@ -47,6 +59,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'Branding',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
   {
     slug: 'ecommerce-conversion-tips-that-actually-work',
@@ -55,6 +70,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'E-Commerce',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
   {
     slug: 'local-seo-for-pakistani-businesses',
@@ -63,6 +81,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'SEO',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
   {
     slug: 'how-to-brief-a-design-agency',
@@ -71,6 +92,9 @@ const FALLBACK_POSTS: BlogPostMeta[] = [
     category: 'Business',
     date: '',
     comingSoon: true,
+    image: '',
+    readTime: 0,
+    featured: false,
   },
 ];
 
@@ -90,6 +114,10 @@ function parsePostFile(slug: string): BlogPost | null {
     const raw = fs.readFileSync(path.join(BLOG_DIR, `${slug}.mdx`), 'utf8');
     const { data, content } = matter(raw);
     const record = data as Record<string, unknown>;
+    const readTime =
+      typeof record.readTime === 'number' && record.readTime > 0
+        ? Math.round(record.readTime)
+        : estimateReadingMinutes(content);
     return {
       slug,
       title: typeof record.title === 'string' ? record.title : slug,
@@ -102,6 +130,9 @@ function parsePostFile(slug: string): BlogPost | null {
       category: typeof record.category === 'string' ? record.category : 'General',
       date: typeof record.date === 'string' ? record.date : '',
       comingSoon: false,
+      image: typeof record.image === 'string' ? record.image : '',
+      readTime,
+      featured: record.featured === true,
       content,
     };
   } catch {
@@ -129,6 +160,9 @@ export function getAllPosts(): BlogPostMeta[] {
         category: post.category,
         date: post.date,
         comingSoon: post.comingSoon,
+        image: post.image,
+        readTime: post.readTime,
+        featured: post.featured,
       });
     } else {
       const fallback = FALLBACK_POSTS.find((item) => item.slug === slug);

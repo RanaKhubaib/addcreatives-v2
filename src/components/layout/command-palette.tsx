@@ -6,14 +6,11 @@ import {
   Home,
   Info,
   MessageCircle,
-  Moon,
   Newspaper,
   Palette,
   Search,
-  Sun,
   Briefcase,
 } from 'lucide-react';
-import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { services } from '@/data/services';
@@ -32,13 +29,13 @@ const PAGES = [
 /**
  * Command palette (cmdk). Opens on Cmd/Ctrl+K, from the nav search button
  * (via the `ac:open-command-palette` window event), closes on Escape or
- * selection. Lists pages, all 7 services, and actions (toggle theme,
- * chat on WhatsApp). Pauses Lenis smooth scroll while open.
+ * selection. Lists pages, all 7 services, and actions (chat on WhatsApp).
+ * Pauses Lenis smooth scroll while open. The site is light-only, so there
+ * is no theme-toggle action here.
  */
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
   const { setPaused } = useLenis();
 
   useEffect(() => {
@@ -59,6 +56,9 @@ export function CommandPalette() {
 
   useEffect(() => {
     setPaused(open);
+    // Unmount cleanup: never leave Lenis paused if the palette unmounts
+    // while open.
+    return () => setPaused(false);
   }, [open, setPaused]);
 
   const go = (href: string) => {
@@ -112,20 +112,6 @@ export function CommandPalette() {
             ))}
           </Command.Group>
           <Command.Group heading="Actions">
-            <Command.Item
-              value="Toggle theme"
-              onSelect={() => {
-                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-                setOpen(false);
-              }}
-            >
-              {resolvedTheme === 'dark' ? (
-                <Sun className="h-4 w-4 text-royal dark:text-peri" />
-              ) : (
-                <Moon className="h-4 w-4 text-royal dark:text-peri" />
-              )}
-              Toggle theme
-            </Command.Item>
             <Command.Item
               value="Chat on WhatsApp"
               onSelect={() => {

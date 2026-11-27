@@ -13,6 +13,7 @@ import {
 } from 'framer-motion';
 import { ArrowRight, Mail, MessageCircle, TrendingUp } from 'lucide-react';
 import { siteConfig } from '@/data/site-config';
+import { useLenis } from '@/components/effects/lenis-provider';
 
 // Lazy-loaded WebGL gradient mesh — never blocks the first paint.
 const WebGLHero = dynamic(() => import('./webgl-hero'), {
@@ -217,6 +218,7 @@ function LeadCard({ className }: { className?: string }) {
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const { getLenis } = useLenis();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -227,7 +229,17 @@ export default function Hero() {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const scrollToNext = () => {
+    // Lenis owns the scroll position while it runs: a native smooth
+    // scrollIntoView fights its rAF loop (the page judders or snaps
+    // back), so go through Lenis when it exists. With no Lenis (touch /
+    // reduced motion) native scrolling is the only driver, so it is safe.
+    const lenis = getLenis();
     const next = document.querySelector('#services, #manifesto, main > section:nth-of-type(2)');
+    if (lenis) {
+      if (next) lenis.scrollTo(next as HTMLElement);
+      else lenis.scrollTo(window.innerHeight);
+      return;
+    }
     if (next) {
       next.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
     } else {

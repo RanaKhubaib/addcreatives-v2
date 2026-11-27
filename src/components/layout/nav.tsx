@@ -27,8 +27,10 @@ const MEGA_CLOSE_DELAY_MS = 150;
 
 /**
  * Sticky nav: logo left, links, "Start a project" CTA, full-screen
- * staggered mobile menu. Transparent over the hero, solid once scrolled.
- * Desktop Services link opens a full-width mega menu with all 7 services.
+ * staggered mobile menu. Solid white at every scroll position, on every
+ * page — the header is never transparent, so the ink/navy links are
+ * always readable. Desktop Services link opens a full-width mega menu
+ * with all 7 services.
  *
  * Mega-menu visibility fix (2026-11-27): the menu used to close the moment
  * the pointer left the small Services button, because the mouseleave
@@ -42,18 +44,10 @@ const MEGA_CLOSE_DELAY_MS = 150;
  */
 export function Nav() {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // Close menus on route change (React's adjust-state-during-render pattern).
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -108,19 +102,14 @@ export function Nav() {
     closeTimer.current = setTimeout(() => setMegaOpen(false), MEGA_CLOSE_DELAY_MS);
   };
 
-  const solid = scrolled || megaOpen;
-
+  // The header is solid white at all times — no scrolled state, no
+  // transparent variant — so it can never be transparent.
   return (
     <>
       <header
         onMouseEnter={cancelClose}
         onMouseLeave={scheduleClose}
-        className={cn(
-          'sticky top-0 z-50 transition-all duration-300',
-          solid
-            ? 'border-b border-ink/10 bg-white shadow-[0_8px_30px_rgba(10,15,28,0.08)] dark:border-white/10 dark:bg-ink'
-            : 'border-b border-transparent bg-transparent',
-        )}
+        className="sticky top-0 z-50 border-b border-ink/10 bg-white shadow-[0_8px_30px_rgba(10,15,28,0.08)] transition-all duration-300"
       >
         <nav
           aria-label="Main navigation"
@@ -181,7 +170,7 @@ export function Nav() {
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
               aria-expanded={mobileOpen}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-white/70 text-ink transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal lg:hidden dark:border-white/15 dark:bg-white/5 dark:text-white"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition-colors hover:text-royal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-royal lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>

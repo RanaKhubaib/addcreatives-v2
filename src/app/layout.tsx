@@ -58,7 +58,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
     >
       <body className="min-h-full bg-white font-sans text-ink dark:bg-ink dark:text-white">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        {/* Site is light-only: forcedTheme="light" means the theme never
+            switches to dark, so `dark:` classes in the codebase never apply. */}
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <LenisProvider>
             <a
               href="#main-content"

@@ -4,16 +4,7 @@ import Hero from '@/components/sections/hero';
 import TrustedMarquee from '@/components/sections/trusted-marquee';
 import ServicesBento from '@/components/sections/services-bento';
 import Manifesto from '@/components/sections/manifesto';
-import SelectedWork from '@/components/sections/selected-work';
-import ProcessSection from '@/components/sections/process-section';
-import ResultsNumbers from '@/components/sections/results-numbers';
-import { ToolsWall } from '@/components/sections/tools-wall';
-import { ProjectPlanner } from '@/components/sections/project-planner';
-import { AuditMagnet } from '@/components/sections/audit-magnet';
-import { Testimonials } from '@/components/sections/testimonials';
-import { BlogPreview } from '@/components/sections/blog-preview';
-import { FaqSection } from '@/components/sections/faq-section';
-import { FinalCta } from '@/components/sections/final-cta';
+import { BelowFoldSections } from '@/components/sections/below-fold-sections';
 import { defaultMetadata, jsonLdOrganization, jsonLdFaq } from '@/lib/seo';
 import { faqs } from '@/data/faq';
 
@@ -33,16 +24,10 @@ export default function Home() {
         <TrustedMarquee />
         <ServicesBento />
         <Manifesto />
-        <SelectedWork />
-        <ProcessSection />
-        <ResultsNumbers />
-        <ToolsWall />
-        <ProjectPlanner />
-        <AuditMagnet />
-        <Testimonials />
-        <BlogPreview />
-        <FaqSection />
-        <FinalCta />
+        {/* Below-fold sections: lazy-loaded on approach (see
+            below-fold-sections.tsx). FAQ structured data is still inlined
+            below, so search engines see it even before the FAQ mounts. */}
+        <BelowFoldSections />
       </main>
       <script
         type="application/ld+json"

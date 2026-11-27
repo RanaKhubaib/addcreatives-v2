@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { caseStudies, type CaseStudy } from '@/data/case-studies';
+import { useLenis } from '@/components/effects/lenis-provider';
 
 function WorkCard({ study, widthClass }: { study: CaseStudy; widthClass: string }) {
   const [bubble, setBubble] = useState<{ x: number; y: number; show: boolean }>({
@@ -92,6 +93,7 @@ export default function SelectedWork() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const { getLenis, setGsapDriven } = useLenis();
 
   useEffect(() => {
     // GSAP is loaded lazily, only on desktop and only when motion is
@@ -104,12 +106,57 @@ export default function SelectedWork() {
     let cleanup: (() => void) | undefined;
 
     (async () => {
-      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
-        import('gsap'),
-        import('gsap/ScrollTrigger'),
-      ]);
+      let gsap: typeof import('gsap').default;
+      let ScrollTrigger: typeof import('gsap/ScrollTrigger').ScrollTrigger;
+      try {
+        [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+          import('gsap'),
+          import('gsap/ScrollTrigger'),
+        ]);
+      } catch {
+        // GSAP failed to load: the gallery stays a static track and the
+        // provider's own rAF loop keeps driving Lenis — scroll never breaks.
+        return;
+      }
       if (cancelled) return;
       gsap.registerPlugin(ScrollTrigger);
+
+      // Lenis + ScrollTrigger integration (the scroll-stuck root cause):
+      // Lenis smooths scroll in its own rAF loop while ScrollTrigger
+      // measures the native scroll position, so a pinned trigger's start/end
+      // desynced from where Lenis thought the page was and the pin trapped
+      // scroll at its boundaries. Standard fix: drive Lenis from the GSAP
+      // ticker instead of its own loop, and push every Lenis scroll event
+      // into ScrollTrigger. On touch devices there is no Lenis instance
+      // (native scroll), so ScrollTrigger already reads the true position
+      // and no wiring is needed.
+      const lenis = getLenis();
+      let teardownIntegration: (() => void) | undefined;
+      if (lenis) {
+        const onLenisScroll = () => ScrollTrigger.update();
+        const driveLenis = (time: number) => {
+          lenis.raf(time * 1000);
+        };
+        lenis.on('scroll', onLenisScroll);
+        gsap.ticker.add(driveLenis);
+        gsap.ticker.lagSmoothing(0);
+        setGsapDriven(true);
+        teardownIntegration = () => {
+          lenis.off('scroll', onLenisScroll);
+          gsap.ticker.remove(driveLenis);
+          setGsapDriven(false);
+        };
+      }
+
+      // Pin positions depend on fonts and images: refresh once everything
+      // has landed so the pin starts/ends at the true offsets. Resize is
+      // already covered by invalidateOnRefresh + ScrollTrigger's own
+      // resize handling.
+      const refreshTriggers = () => {
+        if (!cancelled) ScrollTrigger.refresh();
+      };
+      window.addEventListener('load', refreshTriggers);
+      void document.fonts?.ready.then(refreshTriggers);
 
       const mm = gsap.matchMedia();
 
@@ -130,7 +177,7 @@ export default function SelectedWork() {
             start: 'top top',
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 1,
+            scrub: 0.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
@@ -153,14 +200,18 @@ export default function SelectedWork() {
         };
       });
 
-      cleanup = () => mm.revert();
+      cleanup = () => {
+        teardownIntegration?.();
+        window.removeEventListener('load', refreshTriggers);
+        mm.revert();
+      };
     })();
 
     return () => {
       cancelled = true;
       cleanup?.();
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, getLenis, setGsapDriven]);
 
   return (
     <section aria-label="Selected work" className="bg-ink py-24 text-white sm:py-32">
