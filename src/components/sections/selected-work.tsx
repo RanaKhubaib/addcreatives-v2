@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { caseStudies, type CaseStudy } from '@/data/case-studies';
-import { useLenis } from '@/components/effects/lenis-provider';
 
 function WorkCard({ study, widthClass }: { study: CaseStudy; widthClass: string }) {
   const [bubble, setBubble] = useState<{ x: number; y: number; show: boolean }>({
@@ -93,7 +92,6 @@ export default function SelectedWork() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const { getLenis, setGsapDriven } = useLenis();
 
   useEffect(() => {
     // GSAP is loaded lazily, only on desktop and only when motion is
@@ -114,39 +112,19 @@ export default function SelectedWork() {
           import('gsap/ScrollTrigger'),
         ]);
       } catch {
-        // GSAP failed to load: the gallery stays a static track and the
-        // provider's own rAF loop keeps driving Lenis — scroll never breaks.
+        // GSAP failed to load: the gallery stays a static track and
+        // native scrolling is untouched — scroll never breaks.
         return;
       }
       if (cancelled) return;
       gsap.registerPlugin(ScrollTrigger);
 
-      // Lenis + ScrollTrigger integration (the scroll-stuck root cause):
-      // Lenis smooths scroll in its own rAF loop while ScrollTrigger
-      // measures the native scroll position, so a pinned trigger's start/end
-      // desynced from where Lenis thought the page was and the pin trapped
-      // scroll at its boundaries. Standard fix: drive Lenis from the GSAP
-      // ticker instead of its own loop, and push every Lenis scroll event
-      // into ScrollTrigger. On touch devices there is no Lenis instance
-      // (native scroll), so ScrollTrigger already reads the true position
-      // and no wiring is needed.
-      const lenis = getLenis();
-      let teardownIntegration: (() => void) | undefined;
-      if (lenis) {
-        const onLenisScroll = () => ScrollTrigger.update();
-        const driveLenis = (time: number) => {
-          lenis.raf(time * 1000);
-        };
-        lenis.on('scroll', onLenisScroll);
-        gsap.ticker.add(driveLenis);
-        gsap.ticker.lagSmoothing(0);
-        setGsapDriven(true);
-        teardownIntegration = () => {
-          lenis.off('scroll', onLenisScroll);
-          gsap.ticker.remove(driveLenis);
-          setGsapDriven(false);
-        };
-      }
+      // Native scroll only: ScrollTrigger reads the browser's scroll
+      // position directly (its default). There is no smoothing library
+      // to integrate with — the previous Lenis wiring (driving Lenis
+      // from the GSAP ticker + lenis.on('scroll', ScrollTrigger.update))
+      // is what desynced the pin and made wheel/keyboard input feel
+      // damped or get undone by the lerp loop, so it was removed.
 
       // Pin positions depend on fonts and images: refresh once everything
       // has landed so the pin starts/ends at the true offsets. Resize is
@@ -201,7 +179,6 @@ export default function SelectedWork() {
       });
 
       cleanup = () => {
-        teardownIntegration?.();
         window.removeEventListener('load', refreshTriggers);
         mm.revert();
       };
@@ -211,7 +188,7 @@ export default function SelectedWork() {
       cancelled = true;
       cleanup?.();
     };
-  }, [reduceMotion, getLenis, setGsapDriven]);
+  }, [reduceMotion]);
 
   return (
     <section aria-label="Selected work" className="bg-ink py-24 text-white sm:py-32">

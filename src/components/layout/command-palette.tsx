@@ -15,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { services } from '@/data/services';
 import { siteConfig } from '@/data/site-config';
-import { useLenis } from '@/components/effects/lenis-provider';
 
 const PAGES = [
   { label: 'Home', href: '/', Icon: Home },
@@ -30,13 +29,13 @@ const PAGES = [
  * Command palette (cmdk). Opens on Cmd/Ctrl+K, from the nav search button
  * (via the `ac:open-command-palette` window event), closes on Escape or
  * selection. Lists pages, all 7 services, and actions (chat on WhatsApp).
- * Pauses Lenis smooth scroll while open. The site is light-only, so there
+ * Locks body scroll while open (native overflow lock, restored on close
+ * and on unmount — never left behind). The site is light-only, so there
  * is no theme-toggle action here.
  */
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { setPaused } = useLenis();
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -54,12 +53,17 @@ export function CommandPalette() {
     };
   }, []);
 
+  // Lock body scroll while open; always restore it — on close and on
+  // unmount — and restore the *previous* value (not a blank) so a lock
+  // owned by something else (e.g. the mobile menu) is never cleared.
   useEffect(() => {
-    setPaused(open);
-    // Unmount cleanup: never leave Lenis paused if the palette unmounts
-    // while open.
-    return () => setPaused(false);
-  }, [open, setPaused]);
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   const go = (href: string) => {
     setOpen(false);

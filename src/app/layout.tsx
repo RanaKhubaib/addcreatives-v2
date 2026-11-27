@@ -4,7 +4,6 @@ import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import { CustomCursor } from '@/components/effects/cursor';
 import { GrainOverlay } from '@/components/effects/grain';
-import { LenisProvider } from '@/components/effects/lenis-provider';
 import { RouteTransition } from '@/components/effects/route-transition';
 import { ScrollProgress } from '@/components/effects/scroll-progress';
 import { AmbientSoundToggle } from '@/components/effects/sound-toggle';
@@ -61,8 +60,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* Site is light-only: forcedTheme="light" means the theme never
             switches to dark, so `dark:` classes in the codebase never apply. */}
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
-          <LenisProvider>
-            <a
+          <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
             >
@@ -81,7 +79,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <WhatsAppFloat />
             <CookieBanner />
             <AmbientSoundToggle />
-          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>
